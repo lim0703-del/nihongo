@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>일본어 공부</title>
+<meta name="theme-color" content="#263238">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="일본어 공부">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="utf-8">
+<style>
+  :root { --bg:#f5f6fa; --card:#fff; --ink:#263238; --sub:#78909c; --line:#e0e4ea;
+          --g1:#1e88e5; --g2:#43a047; --g3:#fb8c00; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Noto Sans KR','Noto Sans JP',sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:#263238; color:#fff; padding:18px 16px; }
+  header h1 { margin:0; font-size:20px; }
+  header p { margin:4px 0 0; font-size:13px; color:#b0bec5; }
+  .wrap { max-width:1100px; margin:0 auto; padding:16px; }
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px; }
+  .tab, .mode { border:1px solid var(--line); background:#fff; padding:8px 14px; border-radius:20px; cursor:pointer; font-size:14px; }
+  .tab.on { background:#263238; color:#fff; border-color:#263238; }
+  .mode.on { background:#546e7a; color:#fff; border-color:#546e7a; }
+  input[type=search] { flex:1; min-width:180px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px; }
+  .rule { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:14px; line-height:1.7; }
+  .rule b { color:#37474f; }
+  .rule table { border-collapse:collapse; margin-top:6px; font-size:13px; }
+  .rule td, .rule th { border:1px solid var(--line); padding:4px 10px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; }
+  .card { background:var(--card); border-radius:12px; border:1px solid var(--line); overflow:hidden; }
+  .card .top { padding:12px 14px; border-left:6px solid var(--g1); }
+  .card.g2 .top { border-color:var(--g2); } .card.g3 .top { border-color:var(--g3); }
+  .verb { font-size:26px; font-weight:700; }
+  .reading { color:var(--sub); font-size:14px; margin-left:6px; }
+  .meaning { margin-top:2px; font-size:15px; }
+  .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:#eceff1; margin-right:4px; }
+  .card table { width:100%; border-collapse:collapse; font-size:14px; }
+  .card td { padding:6px 10px; border-top:1px solid var(--line); vertical-align:middle; }
+  .card td.lbl { color:var(--sub); font-size:12px; width:36%; }
+  .jp { font-size:16px; } .kn { color:var(--sub); font-size:11px; display:block; } .ko { color:#5e35b1; font-size:13px; }
+  .hl { background:#fff8e1; }
+  .spk { border:none; background:none; cursor:pointer; font-size:16px; padding:0 4px; }
+  .tbl-wrap { overflow:auto; background:#fff; border-radius:10px; border:1px solid var(--line); }
+  table.big { border-collapse:collapse; font-size:13px; white-space:nowrap; }
+  table.big th { position:sticky; top:0; background:#37474f; color:#fff; padding:8px; }
+  table.big td { border-top:1px solid var(--line); padding:6px 8px; }
+  table.big tr.g1 td:first-child { border-left:4px solid var(--g1); }
+  table.big tr.g2 td:first-child { border-left:4px solid var(--g2); }
+  table.big tr.g3 td:first-child { border-left:4px solid var(--g3); }
+  .quiz { background:#fff; border-radius:14px; border:1px solid var(--line); padding:28px; text-align:center; max-width:560px; margin:0 auto; }
+  .quiz .q { font-size:34px; font-weight:700; }
+  .quiz .ask { margin:12px 0; font-size:17px; color:#5e35b1; }
+  .quiz .ans { font-size:26px; min-height:70px; margin:12px 0; }
+  .btn { background:#263238; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:15px; cursor:pointer; margin:4px; }
+  .btn.alt { background:#90a4ae; }
+  .loading { text-align:center; padding:60px; color:var(--sub); }
+  .count { color:var(--sub); font-size:13px; }
+  /* 상단 메뉴 */
+  .nav { display:flex; gap:6px; margin-top:12px; }
+  .nav button { border:none; background:#37474f; color:#cfd8dc; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:14px; }
+  .nav button.on { background:#fff; color:#263238; font-weight:700; }
+  .hidden { display:none !important; }
+  /* 숫자 퀴즈 */
+  .lv { border:1px solid var(--line); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:13px; }
+  .lv.on { background:#5e35b1; color:#fff; border-color:#5e35b1; }
+  .numq { font-size:56px; font-weight:800; letter-spacing:1px; }
+  .stats { display:flex; justify-content:center; gap:18px; font-size:13px; color:var(--sub); margin-bottom:14px; flex-wrap:wrap; }
+  .stats b { color:var(--ink); font-size:16px; }
+  .parts { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:8px; }
+  .part { background:#ede7f6; border-radius:8px; padding:4px 10px; font-size:14px; }
+  .part small { display:block; color:var(--sub); font-size:11px; }
+  .part.irr { background:#ffe0b2; }
+  .ansinput { font-size:20px; padding:10px; width:100%; max-width:320px; border:2px solid var(--line); border-radius:10px; text-align:center; }
+  .ok { color:#2e7d32; font-weight:700; } .ng { color:#c62828; font-weight:700; }
+  .timer { font-size:13px; color:var(--sub); }
+  .ref { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin-top:16px; font-size:13px; overflow:auto; }
+  .ref table { border-collapse:collapse; width:100%; }
+  .ref td, .ref th { border:1px solid var(--line); padding:5px 8px; text-align:center; white-space:nowrap; }
+  .ref .irr { background:#fff3e0; font-weight:700; }
+  /* 음성 인식 */
+  .mic { width:92px; height:92px; border-radius:50%; border:none; background:#5e35b1; color:#fff; font-size:38px; cursor:pointer; box-shadow:0 4px 14px rgba(94,53,177,.35); }
+  .mic.rec { background:#e53935; animation:pulse 1s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(229,57,53,.5)} 100%{box-shadow:0 0 0 22px rgba(229,57,53,0)} }
+  .heard { margin-top:10px; font-size:15px; color:var(--sub); min-height:22px; }
+  .heard b { color:var(--ink); }
+  .koq { font-size:32px; font-weight:800; line-height:1.3; }
+  .opts { font-size:13px; color:var(--sub); margin-top:14px; }
+  /* 📊 한눈에 보기 */
+  .ovopts { font-size:13px; gap:12px; }
+  .ovopts label { display:flex; align-items:center; gap:4px; cursor:pointer; }
+  .end-demo { color:#e53935; font-weight:800; }
+  .ov-sec { margin-bottom:26px; border-radius:14px; overflow:hidden; border:1px solid var(--line); background:#fff; }
+  .ov-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; padding:14px 16px; color:#fff; }
+  .g1 .ov-head { background:linear-gradient(135deg,#1e88e5,#1565c0); }
+  .g2 .ov-head { background:linear-gradient(135deg,#43a047,#2e7d32); }
+  .g3 .ov-head { background:linear-gradient(135deg,#fb8c00,#ef6c00); }
+  .ov-head h2 { margin:0; font-size:20px; } .ov-head h2 small { font-size:13px; opacity:.85; font-weight:400; }
+  .ov-head .desc { font-size:13px; opacity:.9; margin-top:2px; }
+  .formula { display:flex; flex-direction:column; gap:4px; }
+  .formula span { background:rgba(255,255,255,.18); border-radius:8px; padding:3px 10px; font-size:12.5px; }
+  .ov-subh { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 14px; background:#f7f9fc; border-top:1px solid var(--line); }
+  .endbig { font-size:17px; font-weight:800; padding:2px 12px; border-radius:8px; color:#fff; }
+  .g1 .endbig { background:var(--g1); } .g2 .endbig { background:var(--g2); } .g3 .endbig { background:var(--g3); }
+  .rulechip { background:#fff; border:1px solid var(--line); border-radius:14px; padding:3px 10px; font-size:13px; font-weight:600; }
+  .notechip { background:#fff3e0; color:#e65100; border-radius:14px; padding:3px 10px; font-size:12px; }
+  .ov-wrap { overflow-x:auto; }
+  table.ov { border-collapse:separate; border-spacing:0; width:100%; font-size:14px; }
+  table.ov th { background:#eceff1; color:#455a64; font-size:11.5px; font-weight:700; padding:6px 10px; text-align:left; white-space:nowrap; border-bottom:2px solid var(--line); }
+  table.ov th.pol { background:#e3f2fd; color:#1565c0; } table.ov th.cas { background:#fff3e0; color:#e65100; }
+  table.ov th.hl, table.ov td.hl { background:#fff59d !important; }
+  table.ov td { padding:8px 10px; border-bottom:1px solid #f0f2f5; white-space:nowrap; vertical-align:top; }
+  table.ov tbody tr:hover td { background:#fffde7; }
+  table.ov .sticky { position:sticky; left:0; z-index:1; background:#fff; border-right:2px solid var(--line); min-width:150px; }
+  table.ov th.sticky { background:#eceff1; z-index:2; }
+  .basewrap { display:flex; gap:8px; align-items:flex-start; }
+  .cat { min-width:30px; text-align:center; font-weight:800; font-size:15px; border-radius:6px; padding:2px 6px; color:#fff; }
+  .g1 .cat { background:var(--g1); } .g2 .cat { background:var(--g2); font-size:11px; } .g3 .cat { background:var(--g3); font-size:11px; }
+  .bk { font-size:19px; font-weight:800; }
+  .exc { font-size:10px; background:#ffe0b2; color:#e65100; border-radius:6px; padding:1px 5px; margin-left:2px; vertical-align:middle; }
+  .bm { display:block; margin-top:3px; font-size:12.5px; font-weight:600; color:#37474f; white-space:normal; max-width:130px; }
+  #verbApp { max-width:1400px; }
+  .nav { overflow-x:auto; } .nav button { white-space:nowrap; flex:none; }
+  @media (max-width:600px) { .nav button { padding:7px 10px; font-size:13px; } table.ov .sticky { min-width:120px; } .bk { font-size:17px; } }
+  .fj { font-size:16px; }
+  .g1 .end { color:#1565c0; font-weight:800; } .g2 .end { color:#2e7d32; font-weight:800; } .g3 .end { color:#ef6c00; font-weight:800; }
+  .fc .end { color:#e53935 !important; }
+  table.ov .rd { display:block; font-size:11px; color:var(--sub); }
+  table.ov .pr { display:block; font-size:11px; color:#5e35b1; }
+  table.ov .spk { font-size:13px; padding:0 2px; opacity:.6; }
+  body.hide-rd table.ov .rd, body.hide-rd .card .kn { display:none; }
+  body.hide-pr table.ov .pr { display:none; }
+  body.hide-mean .bm, body.hide-mean .card .meaning { display:none; }
+  /* 형태 칩 */
+  .formbar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; }
+  .fbl { font-size:13px; color:var(--sub); margin-right:2px; }
+  .fchip { border:1.5px solid var(--line); background:#fff; border-radius:18px; padding:5px 11px; font-size:13px; cursor:pointer; }
+  .fchip span { color:var(--sub); font-size:12px; }
+  .fchip.pol { border-color:#90caf9; } .fchip.cas { border-color:#ffcc80; }
+  .fchip.on { background:#263238; color:#fff; border-color:#263238; } .fchip.on span { color:#cfd8dc; }
+  /* 표 머리글 두 줄 */
+  table.ov th b { display:block; font-size:12.5px; } table.ov th span { font-weight:500; font-size:11.5px; }
+  table.ov td.fc { cursor:pointer; padding:7px 8px; }
+  table.ov td.fc:active { background:#ede7f6; }
+  .fj { font-size:15.5px; }
+  /* 규칙 한눈에 */
+  .rulebox { background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:20px; overflow:hidden; }
+  .rulebox summary { cursor:pointer; padding:12px 16px; font-weight:800; font-size:16px; background:#263238; color:#fff; }
+  .rulebox summary small { font-weight:400; opacity:.75; font-size:12px; }
+  table.rc td, table.rc th { white-space:nowrap; }
+  table.rc th.rg1 { background:#e3f2fd; color:#1565c0; } table.rc th.rg2 { background:#e8f5e9; color:#2e7d32; } table.rc th.rg3 { background:#fff3e0; color:#ef6c00; }
+  table.rc th b { display:inline; font-size:14px; color:var(--ink); }
+  .polc { background:#e3f2fd; color:#1565c0; } .casc { background:#fff3e0; color:#e65100; }
+  .polc b, .casc b { font-size:13.5px; } .fend { font-size:13px; font-weight:700; }
+  .kmean { font-size:13px; color:#37474f; }
+  .hlrow td { background:#fff59d !important; }
+  .rulefoot { font-size:12px; color:var(--sub); padding:8px 14px; border-top:1px solid var(--line); }
+  table.rc .end { color:#e53935; font-weight:800; }
+  table.rc .pr { display:block; font-size:11px; color:#5e35b1; }
+  /* 휴대폰: 동사 하나 = 카드 한 장, 7가지 형태를 2칸 격자로 */
+  @media (max-width:760px) {
+    table.ov:not(.rc) thead { display:none; }
+    table.ov:not(.rc), table.ov:not(.rc) tbody { display:block; }
+    table.ov:not(.rc) tr { display:grid; grid-template-columns:1fr 1fr; border-bottom:6px solid #f5f6fa; }
+    table.ov:not(.rc) td { white-space:normal; border-bottom:1px solid #f0f2f5; }
+    table.ov:not(.rc) td.sticky { grid-column:1 / -1; position:static; border-right:none; background:#fafbfc; }
+    table.ov:not(.rc) td.fc::before { content:attr(data-label); display:block; font-size:10.5px; font-weight:700; color:#78909c; margin-bottom:1px; }
+    table.ov:not(.rc) td.fc.pol::before { color:#1565c0; } table.ov:not(.rc) td.fc.cas::before { color:#e65100; }
+    table.ov:not(.rc) td.fc:nth-child(2) { grid-column:1 / -1; }
+    .bm { max-width:none; }
+    .rulebox summary { font-size:15px; }
+  }
+  /* 여행 일본어 */
+  .dayh { font-size:16px; font-weight:800; margin:18px 0 8px; color:#b3364a; }
+  .tlist { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
+  .titem { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+  .titem .tj { font-size:20px; font-weight:700; }
+  .titem .tk { font-size:13px; color:var(--sub); }
+  .titem .th { font-size:15px; color:#5e35b1; font-weight:600; }
+  .titem .tm { font-size:13px; margin-top:2px; }
+  .titem .tm b { font-size:15px; }
+  .tacts { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .sbtn { border:1px solid var(--line); background:#f5f6fa; border-radius:8px; padding:4px 10px; font-size:12.5px; cursor:pointer; }
+  .sbtn.rec { background:#e53935; color:#fff; border-color:#e53935; }
+  .say { font-size:13px; margin-top:6px; color:var(--sub); }
+  .taxi { margin-top:8px; background:#fff8e1; border-radius:8px; padding:8px 10px; font-size:14px; }
+  .taxi div + div { margin-top:6px; padding-top:6px; border-top:1px dashed #ffe082; }
+  .chipc { border:1px solid var(--line); background:#fff; padding:6px 12px; border-radius:16px; cursor:pointer; font-size:13px; }
+  .chipc.on { background:#b3364a; color:#fff; border-color:#b3364a; }
+  .bigshow { position:fixed; inset:0; background:#fff; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; cursor:pointer; }
+  .bigjp { font-size:clamp(34px,9vw,72px); font-weight:800; line-height:1.3; }
+  .bigkana { font-size:22px; color:var(--sub); margin-top:14px; }
+  .bigko { font-size:20px; color:#5e35b1; margin-top:6px; }
+  .bighint { position:absolute; bottom:24px; font-size:13px; color:var(--sub); }
+</style>
+</head>
+<body>
+<header style="padding-top:calc(18px + env(safe-area-inset-top))">
+  <h1>🇯🇵 일본어 동사 활용 학습</h1>
+  <p>동사 102개 활용 · 숫자 1~99,999 퀴즈 — 🔊 버튼으로 일본어 발음 듣기</p>
+  <div class="nav">
+    <button class="on" data-app="verbApp">📘 동사 활용</button>
+    <button data-app="numApp">🔢 숫자 퀴즈</button>
+    <button data-app="travelApp">✈️ 여행 일본어</button>
+  </div>
+</header>
+
+<!-- ───────── 여행 일본어 ───────── -->
+<div class="wrap hidden" id="travelApp">
+  <div class="bar" id="tmodes">
+    <button class="mode on" data-tm="places">📍 내 여행 장소</button>
+    <button class="mode" data-tm="phrases">💬 필수 표현 200</button>
+    <button class="mode" data-tm="quiz">🎤 표현 말하기 퀴즈</button>
+  </div>
+  <div class="bar" id="tfilter"></div>
+  <div id="tview"><div class="loading">불러오는 중…</div></div>
+</div>
+
+<div class="bigshow hidden" id="bigshow" onclick="this.classList.add('hidden')">
+  <div class="bigjp" id="bigjp"></div>
+  <div class="bigkana" id="bigkana"></div>
+  <div class="bigko" id="bigko"></div>
+  <div class="bighint">화면을 누르면 닫혀요</div>
+</div>
+
+<!-- ───────── 숫자 퀴즈 ───────── -->
+<div class="wrap hidden" id="numApp">
+  <div class="bar" id="levels">
+    <button class="lv on" data-lv="1">1단계 · 1~10</button>
+    <button class="lv" data-lv="2">2단계 · 11~99</button>
+    <button class="lv" data-lv="3">3단계 · 100~999</button>
+    <button class="lv" data-lv="4">4단계 · 1,000~9,999</button>
+    <button class="lv" data-lv="5">5단계 · 10,000~99,999</button>
+    <button class="lv" data-lv="6">전체 · 1~99,999</button>
+  </div>
+  <div class="bar" id="nmodes">
+    <button class="mode on" data-nm="read">숫자 보고 읽기</button>
+    <button class="mode" data-nm="listen">듣고 숫자 쓰기</button>
+    <button class="mode" data-nm="speak">🎤 말해서 맞히기</button>
+    <label style="font-size:13px;margin-left:8px">
+      <input type="checkbox" id="seq" checked> 순서대로 (1단계는 1부터)
+    </label>
+  </div>
+
+  <div class="quiz">
+    <div class="stats">
+      <span>맞힘 <b id="sOk">0</b></span>
+      <span>틀림 <b id="sNg">0</b></span>
+      <span>연속 <b id="sStreak">0</b></span>
+      <span>평균 <b id="sAvg">-</b>초</span>
+    </div>
+    <div id="numBox"></div>
+    <div style="margin-top:14px">
+      <button class="btn alt" onclick="retryWrong()">틀린 숫자만 다시 (<span id="wrongCnt">0</span>)</button>
+      <button class="btn alt" onclick="resetNum()">점수 초기화</button>
+    </div>
+  </div>
+
+  <div class="ref" id="numRef"></div>
+</div>
+
+<!-- ───────── 동사 활용 ───────── -->
+<div class="wrap" id="verbApp">
+  <div class="bar" id="tabs">
+    <button class="tab on" data-g="0">전체</button>
+    <button class="tab" data-g="1">1그룹</button>
+    <button class="tab" data-g="2">2그룹</button>
+    <button class="tab" data-g="3">3그룹</button>
+    <input type="search" id="q" placeholder="검색 (한자, 히라가나, 뜻)">
+  </div>
+  <div class="bar" id="modes">
+    <button class="mode on" data-m="table">📊 한눈에 보기</button>
+    <button class="mode" data-m="card">🃏 카드 보기</button>
+    <button class="mode" data-m="quiz">퀴즈</button>
+    <button class="mode" data-m="speak">🎤 말하기 퀴즈</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="formbar" id="formbar"></div>
+
+  <div class="bar ovopts" id="ovopts">
+    <span style="font-size:13px;color:var(--sub)">표시:</span>
+    <label><input type="checkbox" id="optRd" checked> 히라가나 읽기</label>
+    <label><input type="checkbox" id="optPr" checked> 한글 발음</label>
+    <label><input type="checkbox" id="optMean" checked> 뜻</label>
+    <span style="font-size:12px;color:var(--sub)">· <span class="end-demo">색 글자</span> = 바뀌는 부분</span>
+  </div>
+  <div class="rule" id="rule"></div>
+  <div id="view"><div class="loading">불러오는 중…</div></div>
+</div>
+
+<script>
+/* PWA 버전: 동사·여행 데이터가 이 파일 안에 들어 있어서 인터넷 없이도 동작합니다 */
+window.APP_DATA = {"verbs":[{"group":1,"cat":"う","kanji":"買う","kana":"かう","meaning":"사다","ko":"카우","forms":{"te":{"jp":"買って","kana":"かって","ko":"캇테"},"masu":{"jp":"買います","kana":"かいます","ko":"카이마스"},"masen":{"jp":"買いません","kana":"かいません","ko":"카이마센"},"mashita":{"jp":"買いました","kana":"かいました","ko":"카이마시타"},"masendeshita":{"jp":"買いませんでした","kana":"かいませんでした","ko":"카이마센데시타"},"ta":{"jp":"買った","kana":"かった","ko":"캇타"},"nakatta":{"jp":"買わなかった","kana":"かわなかった","ko":"카와나캇타"}},"koForms":{"base":"사다","te":"사고 (~해서)","masu":"삽니다","masen":"사지 않습니다","mashita":"샀습니다","masendeshita":"사지 않았습니다","ta":"샀다","nakatta":"사지 않았다"}},{"group":1,"cat":"う","kanji":"会う","kana":"あう","meaning":"만나다","ko":"아우","forms":{"te":{"jp":"会って","kana":"あって","ko":"앗테"},"masu":{"jp":"会います","kana":"あいます","ko":"아이마스"},"masen":{"jp":"会いません","kana":"あいません","ko":"아이마센"},"mashita":{"jp":"会いました","kana":"あいました","ko":"아이마시타"},"masendeshita":{"jp":"会いませんでした","kana":"あいませんでした","ko":"아이마센데시타"},"ta":{"jp":"会った","kana":"あった","ko":"앗타"},"nakatta":{"jp":"会わなかった","kana":"あわなかった","ko":"아와나캇타"}},"koForms":{"base":"만나다","te":"만나고 (~해서)","masu":"만납니다","masen":"만나지 않습니다","mashita":"만났습니다","masendeshita":"만나지 않았습니다","ta":"만났다","nakatta":"만나지 않았다"}},{"group":1,"cat":"う","kanji":"言う","kana":"いう","meaning":"말하다","ko":"이우","forms":{"te":{"jp":"言って","kana":"いって","ko":"잇테"},"masu":{"jp":"言います","kana":"いいます","ko":"이이마스"},"masen":{"jp":"言いません","kana":"いいません","ko":"이이마센"},"mashita":{"jp":"言いました","kana":"いいました","ko":"이이마시타"},"masendeshita":{"jp":"言いませんでした","kana":"いいませんでした","ko":"이이마센데시타"},"ta":{"jp":"言った","kana":"いった","ko":"잇타"},"nakatta":{"jp":"言わなかった","kana":"いわなかった","ko":"이와나캇타"}},"koForms":{"base":"말하다","te":"말하고 (~해서)","masu":"말합니다","masen":"말하지 않습니다","mashita":"말했습니다","masendeshita":"말하지 않았습니다","ta":"말했다","nakatta":"말하지 않았다"}},{"group":1,"cat":"う","kanji":"使う","kana":"つかう","meaning":"사용하다","ko":"츠카우","forms":{"te":{"jp":"使って","kana":"つかって","ko":"츠캇테"},"masu":{"jp":"使います","kana":"つかいます","ko":"츠카이마스"},"masen":{"jp":"使いません","kana":"つかいません","ko":"츠카이마센"},"mashita":{"jp":"使いました","kana":"つかいました","ko":"츠카이마시타"},"masendeshita":{"jp":"使いませんでした","kana":"つかいませんでした","ko":"츠카이마센데시타"},"ta":{"jp":"使った","kana":"つかった","ko":"츠캇타"},"nakatta":{"jp":"使わなかった","kana":"つかわなかった","ko":"츠카와나캇타"}},"koForms":{"base":"사용하다","te":"사용하고 (~해서)","masu":"사용합니다","masen":"사용하지 않습니다","mashita":"사용했습니다","masendeshita":"사용하지 않았습니다","ta":"사용했다","nakatta":"사용하지 않았다"}},{"group":1,"cat":"う","kanji":"洗う","kana":"あらう","meaning":"씻다","ko":"아라우","forms":{"te":{"jp":"洗って","kana":"あらって","ko":"아랏테"},"masu":{"jp":"洗います","kana":"あらいます","ko":"아라이마스"},"masen":{"jp":"洗いません","kana":"あらいません","ko":"아라이마센"},"mashita":{"jp":"洗いました","kana":"あらいました","ko":"아라이마시타"},"masendeshita":{"jp":"洗いませんでした","kana":"あらいませんでした","ko":"아라이마센데시타"},"ta":{"jp":"洗った","kana":"あらった","ko":"아랏타"},"nakatta":{"jp":"洗わなかった","kana":"あらわなかった","ko":"아라와나캇타"}},"koForms":{"base":"씻다","te":"씻고 (~해서)","masu":"씻습니다","masen":"씻지 않습니다","mashita":"씻었습니다","masendeshita":"씻지 않았습니다","ta":"씻었다","nakatta":"씻지 않았다"}},{"group":1,"cat":"う","kanji":"歌う","kana":"うたう","meaning":"노래하다","ko":"우타우","forms":{"te":{"jp":"歌って","kana":"うたって","ko":"우탓테"},"masu":{"jp":"歌います","kana":"うたいます","ko":"우타이마스"},"masen":{"jp":"歌いません","kana":"うたいません","ko":"우타이마센"},"mashita":{"jp":"歌いました","kana":"うたいました","ko":"우타이마시타"},"masendeshita":{"jp":"歌いませんでした","kana":"うたいませんでした","ko":"우타이마센데시타"},"ta":{"jp":"歌った","kana":"うたった","ko":"우탓타"},"nakatta":{"jp":"歌わなかった","kana":"うたわなかった","ko":"우타와나캇타"}},"koForms":{"base":"노래하다","te":"노래하고 (~해서)","masu":"노래합니다","masen":"노래하지 않습니다","mashita":"노래했습니다","masendeshita":"노래하지 않았습니다","ta":"노래했다","nakatta":"노래하지 않았다"}},{"group":1,"cat":"う","kanji":"習う","kana":"ならう","meaning":"배우다","ko":"나라우","forms":{"te":{"jp":"習って","kana":"ならって","ko":"나랏테"},"masu":{"jp":"習います","kana":"ならいます","ko":"나라이마스"},"masen":{"jp":"習いません","kana":"ならいません","ko":"나라이마센"},"mashita":{"jp":"習いました","kana":"ならいました","ko":"나라이마시타"},"masendeshita":{"jp":"習いませんでした","kana":"ならいませんでした","ko":"나라이마센데시타"},"ta":{"jp":"習った","kana":"ならった","ko":"나랏타"},"nakatta":{"jp":"習わなかった","kana":"ならわなかった","ko":"나라와나캇타"}},"koForms":{"base":"배우다","te":"배우고 (~해서)","masu":"배웁니다","masen":"배우지 않습니다","mashita":"배웠습니다","masendeshita":"배우지 않았습니다","ta":"배웠다","nakatta":"배우지 않았다"}},{"group":1,"cat":"う","kanji":"手伝う","kana":"てつだう","meaning":"돕다","ko":"테츠다우","forms":{"te":{"jp":"手伝って","kana":"てつだって","ko":"테츠닷테"},"masu":{"jp":"手伝います","kana":"てつだいます","ko":"테츠다이마스"},"masen":{"jp":"手伝いません","kana":"てつだいません","ko":"테츠다이마센"},"mashita":{"jp":"手伝いました","kana":"てつだいました","ko":"테츠다이마시타"},"masendeshita":{"jp":"手伝いませんでした","kana":"てつだいませんでした","ko":"테츠다이마센데시타"},"ta":{"jp":"手伝った","kana":"てつだった","ko":"테츠닷타"},"nakatta":{"jp":"手伝わなかった","kana":"てつだわなかった","ko":"테츠다와나캇타"}},"koForms":{"base":"돕다","te":"돕고 (~해서)","masu":"돕습니다","masen":"돕지 않습니다","mashita":"도왔습니다","masendeshita":"돕지 않았습니다","ta":"도왔다","nakatta":"돕지 않았다"}},{"group":1,"cat":"つ","kanji":"待つ","kana":"まつ","meaning":"기다리다","ko":"마츠","forms":{"te":{"jp":"待って","kana":"まって","ko":"맛테"},"masu":{"jp":"待ちます","kana":"まちます","ko":"마치마스"},"masen":{"jp":"待ちません","kana":"まちません","ko":"마치마센"},"mashita":{"jp":"待ちました","kana":"まちました","ko":"마치마시타"},"masendeshita":{"jp":"待ちませんでした","kana":"まちませんでした","ko":"마치마센데시타"},"ta":{"jp":"待った","kana":"まった","ko":"맛타"},"nakatta":{"jp":"待たなかった","kana":"またなかった","ko":"마타나캇타"}},"koForms":{"base":"기다리다","te":"기다리고 (~해서)","masu":"기다립니다","masen":"기다리지 않습니다","mashita":"기다렸습니다","masendeshita":"기다리지 않았습니다","ta":"기다렸다","nakatta":"기다리지 않았다"}},{"group":1,"cat":"つ","kanji":"持つ","kana":"もつ","meaning":"들다, 가지다","ko":"모츠","forms":{"te":{"jp":"持って","kana":"もって","ko":"못테"},"masu":{"jp":"持ちます","kana":"もちます","ko":"모치마스"},"masen":{"jp":"持ちません","kana":"もちません","ko":"모치마센"},"mashita":{"jp":"持ちました","kana":"もちました","ko":"모치마시타"},"masendeshita":{"jp":"持ちませんでした","kana":"もちませんでした","ko":"모치마센데시타"},"ta":{"jp":"持った","kana":"もった","ko":"못타"},"nakatta":{"jp":"持たなかった","kana":"もたなかった","ko":"모타나캇타"}},"koForms":{"base":"들다","te":"들고 (~해서)","masu":"듭니다","masen":"들지 않습니다","mashita":"들었습니다","masendeshita":"들지 않았습니다","ta":"들었다","nakatta":"들지 않았다"}},{"group":1,"cat":"つ","kanji":"立つ","kana":"たつ","meaning":"서다","ko":"타츠","forms":{"te":{"jp":"立って","kana":"たって","ko":"탓테"},"masu":{"jp":"立ちます","kana":"たちます","ko":"타치마스"},"masen":{"jp":"立ちません","kana":"たちません","ko":"타치마센"},"mashita":{"jp":"立ちました","kana":"たちました","ko":"타치마시타"},"masendeshita":{"jp":"立ちませんでした","kana":"たちませんでした","ko":"타치마센데시타"},"ta":{"jp":"立った","kana":"たった","ko":"탓타"},"nakatta":{"jp":"立たなかった","kana":"たたなかった","ko":"타타나캇타"}},"koForms":{"base":"서다","te":"서고 (~해서)","masu":"섭니다","masen":"서지 않습니다","mashita":"섰습니다","masendeshita":"서지 않았습니다","ta":"섰다","nakatta":"서지 않았다"}},{"group":1,"cat":"る","kanji":"取る","kana":"とる","meaning":"잡다, 집다","ko":"토루","forms":{"te":{"jp":"取って","kana":"とって","ko":"톳테"},"masu":{"jp":"取ります","kana":"とります","ko":"토리마스"},"masen":{"jp":"取りません","kana":"とりません","ko":"토리마센"},"mashita":{"jp":"取りました","kana":"とりました","ko":"토리마시타"},"masendeshita":{"jp":"取りませんでした","kana":"とりませんでした","ko":"토리마센데시타"},"ta":{"jp":"取った","kana":"とった","ko":"톳타"},"nakatta":{"jp":"取らなかった","kana":"とらなかった","ko":"토라나캇타"}},"koForms":{"base":"잡다","te":"잡고 (~해서)","masu":"잡습니다","masen":"잡지 않습니다","mashita":"잡았습니다","masendeshita":"잡지 않았습니다","ta":"잡았다","nakatta":"잡지 않았다"}},{"group":1,"cat":"る","kanji":"乗る","kana":"のる","meaning":"타다","ko":"노루","forms":{"te":{"jp":"乗って","kana":"のって","ko":"놋테"},"masu":{"jp":"乗ります","kana":"のります","ko":"노리마스"},"masen":{"jp":"乗りません","kana":"のりません","ko":"노리마센"},"mashita":{"jp":"乗りました","kana":"のりました","ko":"노리마시타"},"masendeshita":{"jp":"乗りませんでした","kana":"のりませんでした","ko":"노리마센데시타"},"ta":{"jp":"乗った","kana":"のった","ko":"놋타"},"nakatta":{"jp":"乗らなかった","kana":"のらなかった","ko":"노라나캇타"}},"koForms":{"base":"타다","te":"타고 (~해서)","masu":"탑니다","masen":"타지 않습니다","mashita":"탔습니다","masendeshita":"타지 않았습니다","ta":"탔다","nakatta":"타지 않았다"}},{"group":1,"cat":"る","kanji":"作る","kana":"つくる","meaning":"만들다","ko":"츠쿠루","forms":{"te":{"jp":"作って","kana":"つくって","ko":"츠쿳테"},"masu":{"jp":"作ります","kana":"つくります","ko":"츠쿠리마스"},"masen":{"jp":"作りません","kana":"つくりません","ko":"츠쿠리마센"},"mashita":{"jp":"作りました","kana":"つくりました","ko":"츠쿠리마시타"},"masendeshita":{"jp":"作りませんでした","kana":"つくりませんでした","ko":"츠쿠리마센데시타"},"ta":{"jp":"作った","kana":"つくった","ko":"츠쿳타"},"nakatta":{"jp":"作らなかった","kana":"つくらなかった","ko":"츠쿠라나캇타"}},"koForms":{"base":"만들다","te":"만들고 (~해서)","masu":"만듭니다","masen":"만들지 않습니다","mashita":"만들었습니다","masendeshita":"만들지 않았습니다","ta":"만들었다","nakatta":"만들지 않았다"}},{"group":1,"cat":"る","kanji":"終わる","kana":"おわる","meaning":"끝나다","ko":"오와루","forms":{"te":{"jp":"終わって","kana":"おわって","ko":"오왓테"},"masu":{"jp":"終わります","kana":"おわります","ko":"오와리마스"},"masen":{"jp":"終わりません","kana":"おわりません","ko":"오와리마센"},"mashita":{"jp":"終わりました","kana":"おわりました","ko":"오와리마시타"},"masendeshita":{"jp":"終わりませんでした","kana":"おわりませんでした","ko":"오와리마센데시타"},"ta":{"jp":"終わった","kana":"おわった","ko":"오왓타"},"nakatta":{"jp":"終わらなかった","kana":"おわらなかった","ko":"오와라나캇타"}},"koForms":{"base":"끝나다","te":"끝나고 (~해서)","masu":"끝납니다","masen":"끝나지 않습니다","mashita":"끝났습니다","masendeshita":"끝나지 않았습니다","ta":"끝났다","nakatta":"끝나지 않았다"}},{"group":1,"cat":"る","kanji":"送る","kana":"おくる","meaning":"보내다","ko":"오쿠루","forms":{"te":{"jp":"送って","kana":"おくって","ko":"오쿳테"},"masu":{"jp":"送ります","kana":"おくります","ko":"오쿠리마스"},"masen":{"jp":"送りません","kana":"おくりません","ko":"오쿠리마센"},"mashita":{"jp":"送りました","kana":"おくりました","ko":"오쿠리마시타"},"masendeshita":{"jp":"送りませんでした","kana":"おくりませんでした","ko":"오쿠리마센데시타"},"ta":{"jp":"送った","kana":"おくった","ko":"오쿳타"},"nakatta":{"jp":"送らなかった","kana":"おくらなかった","ko":"오쿠라나캇타"}},"koForms":{"base":"보내다","te":"보내고 (~해서)","masu":"보냅니다","masen":"보내지 않습니다","mashita":"보냈습니다","masendeshita":"보내지 않았습니다","ta":"보냈다","nakatta":"보내지 않았다"}},{"group":1,"cat":"る","kanji":"座る","kana":"すわる","meaning":"앉다","ko":"스와루","forms":{"te":{"jp":"座って","kana":"すわって","ko":"스왓테"},"masu":{"jp":"座ります","kana":"すわります","ko":"스와리마스"},"masen":{"jp":"座りません","kana":"すわりません","ko":"스와리마센"},"mashita":{"jp":"座りました","kana":"すわりました","ko":"스와리마시타"},"masendeshita":{"jp":"座りませんでした","kana":"すわりませんでした","ko":"스와리마센데시타"},"ta":{"jp":"座った","kana":"すわった","ko":"스왓타"},"nakatta":{"jp":"座らなかった","kana":"すわらなかった","ko":"스와라나캇타"}},"koForms":{"base":"앉다","te":"앉고 (~해서)","masu":"앉습니다","masen":"앉지 않습니다","mashita":"앉았습니다","masendeshita":"앉지 않았습니다","ta":"앉았다","nakatta":"앉지 않았다"}},{"group":1,"cat":"る","kanji":"分かる","kana":"わかる","meaning":"알다, 이해하다","ko":"와카루","forms":{"te":{"jp":"分かって","kana":"わかって","ko":"와캇테"},"masu":{"jp":"分かります","kana":"わかります","ko":"와카리마스"},"masen":{"jp":"分かりません","kana":"わかりません","ko":"와카리마센"},"mashita":{"jp":"分かりました","kana":"わかりました","ko":"와카리마시타"},"masendeshita":{"jp":"分かりませんでした","kana":"わかりませんでした","ko":"와카리마센데시타"},"ta":{"jp":"分かった","kana":"わかった","ko":"와캇타"},"nakatta":{"jp":"分からなかった","kana":"わからなかった","ko":"와카라나캇타"}},"koForms":{"base":"알다","te":"알고 (~해서)","masu":"압니다","masen":"알지 않습니다","mashita":"알았습니다","masendeshita":"알지 않았습니다","ta":"알았다","nakatta":"알지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"帰る","kana":"かえる","meaning":"돌아가다","ko":"카에루","forms":{"te":{"jp":"帰って","kana":"かえって","ko":"카엣테"},"masu":{"jp":"帰ります","kana":"かえります","ko":"카에리마스"},"masen":{"jp":"帰りません","kana":"かえりません","ko":"카에리마센"},"mashita":{"jp":"帰りました","kana":"かえりました","ko":"카에리마시타"},"masendeshita":{"jp":"帰りませんでした","kana":"かえりませんでした","ko":"카에리마센데시타"},"ta":{"jp":"帰った","kana":"かえった","ko":"카엣타"},"nakatta":{"jp":"帰らなかった","kana":"かえらなかった","ko":"카에라나캇타"}},"koForms":{"base":"돌아가다","te":"돌아가고 (~해서)","masu":"돌아갑니다","masen":"돌아가지 않습니다","mashita":"돌아갔습니다","masendeshita":"돌아가지 않았습니다","ta":"돌아갔다","nakatta":"돌아가지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"入る","kana":"はいる","meaning":"들어가다","ko":"하이루","forms":{"te":{"jp":"入って","kana":"はいって","ko":"하잇테"},"masu":{"jp":"入ります","kana":"はいります","ko":"하이리마스"},"masen":{"jp":"入りません","kana":"はいりません","ko":"하이리마센"},"mashita":{"jp":"入りました","kana":"はいりました","ko":"하이리마시타"},"masendeshita":{"jp":"入りませんでした","kana":"はいりませんでした","ko":"하이리마센데시타"},"ta":{"jp":"入った","kana":"はいった","ko":"하잇타"},"nakatta":{"jp":"入らなかった","kana":"はいらなかった","ko":"하이라나캇타"}},"koForms":{"base":"들어가다","te":"들어가고 (~해서)","masu":"들어갑니다","masen":"들어가지 않습니다","mashita":"들어갔습니다","masendeshita":"들어가지 않았습니다","ta":"들어갔다","nakatta":"들어가지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"走る","kana":"はしる","meaning":"달리다","ko":"하시루","forms":{"te":{"jp":"走って","kana":"はしって","ko":"하싯테"},"masu":{"jp":"走ります","kana":"はしります","ko":"하시리마스"},"masen":{"jp":"走りません","kana":"はしりません","ko":"하시리마센"},"mashita":{"jp":"走りました","kana":"はしりました","ko":"하시리마시타"},"masendeshita":{"jp":"走りませんでした","kana":"はしりませんでした","ko":"하시리마센데시타"},"ta":{"jp":"走った","kana":"はしった","ko":"하싯타"},"nakatta":{"jp":"走らなかった","kana":"はしらなかった","ko":"하시라나캇타"}},"koForms":{"base":"달리다","te":"달리고 (~해서)","masu":"달립니다","masen":"달리지 않습니다","mashita":"달렸습니다","masendeshita":"달리지 않았습니다","ta":"달렸다","nakatta":"달리지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"知る","kana":"しる","meaning":"알다","ko":"시루","forms":{"te":{"jp":"知って","kana":"しって","ko":"싯테"},"masu":{"jp":"知ります","kana":"しります","ko":"시리마스"},"masen":{"jp":"知りません","kana":"しりません","ko":"시리마센"},"mashita":{"jp":"知りました","kana":"しりました","ko":"시리마시타"},"masendeshita":{"jp":"知りませんでした","kana":"しりませんでした","ko":"시리마센데시타"},"ta":{"jp":"知った","kana":"しった","ko":"싯타"},"nakatta":{"jp":"知らなかった","kana":"しらなかった","ko":"시라나캇타"}},"koForms":{"base":"알다","te":"알고 (~해서)","masu":"압니다","masen":"알지 않습니다","mashita":"알았습니다","masendeshita":"알지 않았습니다","ta":"알았다","nakatta":"알지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"切る","kana":"きる","meaning":"자르다","ko":"키루","forms":{"te":{"jp":"切って","kana":"きって","ko":"킷테"},"masu":{"jp":"切ります","kana":"きります","ko":"키리마스"},"masen":{"jp":"切りません","kana":"きりません","ko":"키리마센"},"mashita":{"jp":"切りました","kana":"きりました","ko":"키리마시타"},"masendeshita":{"jp":"切りませんでした","kana":"きりませんでした","ko":"키리마센데시타"},"ta":{"jp":"切った","kana":"きった","ko":"킷타"},"nakatta":{"jp":"切らなかった","kana":"きらなかった","ko":"키라나캇타"}},"koForms":{"base":"자르다","te":"자르고 (~해서)","masu":"자릅니다","masen":"자르지 않습니다","mashita":"잘랐습니다","masendeshita":"자르지 않았습니다","ta":"잘랐다","nakatta":"자르지 않았다"}},{"group":1,"cat":"る (예외)","kanji":"要る","kana":"いる","meaning":"필요하다","ko":"이루","forms":{"te":{"jp":"要って","kana":"いって","ko":"잇테"},"masu":{"jp":"要ります","kana":"いります","ko":"이리마스"},"masen":{"jp":"要りません","kana":"いりません","ko":"이리마센"},"mashita":{"jp":"要りました","kana":"いりました","ko":"이리마시타"},"masendeshita":{"jp":"要りませんでした","kana":"いりませんでした","ko":"이리마센데시타"},"ta":{"jp":"要った","kana":"いった","ko":"잇타"},"nakatta":{"jp":"要らなかった","kana":"いらなかった","ko":"이라나캇타"}},"koForms":{"base":"필요하다","te":"필요하고 (~해서)","masu":"필요합니다","masen":"필요하지 않습니다","mashita":"필요했습니다","masendeshita":"필요하지 않았습니다","ta":"필요했다","nakatta":"필요하지 않았다"}},{"group":1,"cat":"く","kanji":"書く","kana":"かく","meaning":"쓰다","ko":"카쿠","forms":{"te":{"jp":"書いて","kana":"かいて","ko":"카이테"},"masu":{"jp":"書きます","kana":"かきます","ko":"카키마스"},"masen":{"jp":"書きません","kana":"かきません","ko":"카키마센"},"mashita":{"jp":"書きました","kana":"かきました","ko":"카키마시타"},"masendeshita":{"jp":"書きませんでした","kana":"かきませんでした","ko":"카키마센데시타"},"ta":{"jp":"書いた","kana":"かいた","ko":"카이타"},"nakatta":{"jp":"書かなかった","kana":"かかなかった","ko":"카카나캇타"}},"koForms":{"base":"쓰다","te":"쓰고 (~해서)","masu":"씁니다","masen":"쓰지 않습니다","mashita":"썼습니다","masendeshita":"쓰지 않았습니다","ta":"썼다","nakatta":"쓰지 않았다"}},{"group":1,"cat":"く","kanji":"聞く","kana":"きく","meaning":"듣다, 묻다","ko":"키쿠","forms":{"te":{"jp":"聞いて","kana":"きいて","ko":"키이테"},"masu":{"jp":"聞きます","kana":"ききます","ko":"키키마스"},"masen":{"jp":"聞きません","kana":"ききません","ko":"키키마센"},"mashita":{"jp":"聞きました","kana":"ききました","ko":"키키마시타"},"masendeshita":{"jp":"聞きませんでした","kana":"ききませんでした","ko":"키키마센데시타"},"ta":{"jp":"聞いた","kana":"きいた","ko":"키이타"},"nakatta":{"jp":"聞かなかった","kana":"きかなかった","ko":"키카나캇타"}},"koForms":{"base":"듣다","te":"듣고 (~해서)","masu":"듣습니다","masen":"듣지 않습니다","mashita":"들었습니다","masendeshita":"듣지 않았습니다","ta":"들었다","nakatta":"듣지 않았다"}},{"group":1,"cat":"く","kanji":"歩く","kana":"あるく","meaning":"걷다","ko":"아루쿠","forms":{"te":{"jp":"歩いて","kana":"あるいて","ko":"아루이테"},"masu":{"jp":"歩きます","kana":"あるきます","ko":"아루키마스"},"masen":{"jp":"歩きません","kana":"あるきません","ko":"아루키마센"},"mashita":{"jp":"歩きました","kana":"あるきました","ko":"아루키마시타"},"masendeshita":{"jp":"歩きませんでした","kana":"あるきませんでした","ko":"아루키마센데시타"},"ta":{"jp":"歩いた","kana":"あるいた","ko":"아루이타"},"nakatta":{"jp":"歩かなかった","kana":"あるかなかった","ko":"아루카나캇타"}},"koForms":{"base":"걷다","te":"걷고 (~해서)","masu":"걷습니다","masen":"걷지 않습니다","mashita":"걸었습니다","masendeshita":"걷지 않았습니다","ta":"걸었다","nakatta":"걷지 않았다"}},{"group":1,"cat":"く","kanji":"働く","kana":"はたらく","meaning":"일하다","ko":"하타라쿠","forms":{"te":{"jp":"働いて","kana":"はたらいて","ko":"하타라이테"},"masu":{"jp":"働きます","kana":"はたらきます","ko":"하타라키마스"},"masen":{"jp":"働きません","kana":"はたらきません","ko":"하타라키마센"},"mashita":{"jp":"働きました","kana":"はたらきました","ko":"하타라키마시타"},"masendeshita":{"jp":"働きませんでした","kana":"はたらきませんでした","ko":"하타라키마센데시타"},"ta":{"jp":"働いた","kana":"はたらいた","ko":"하타라이타"},"nakatta":{"jp":"働かなかった","kana":"はたらかなかった","ko":"하타라카나캇타"}},"koForms":{"base":"일하다","te":"일하고 (~해서)","masu":"일합니다","masen":"일하지 않습니다","mashita":"일했습니다","masendeshita":"일하지 않았습니다","ta":"일했다","nakatta":"일하지 않았다"}},{"group":1,"cat":"く","kanji":"置く","kana":"おく","meaning":"두다, 놓다","ko":"오쿠","forms":{"te":{"jp":"置いて","kana":"おいて","ko":"오이테"},"masu":{"jp":"置きます","kana":"おきます","ko":"오키마스"},"masen":{"jp":"置きません","kana":"おきません","ko":"오키마센"},"mashita":{"jp":"置きました","kana":"おきました","ko":"오키마시타"},"masendeshita":{"jp":"置きませんでした","kana":"おきませんでした","ko":"오키마센데시타"},"ta":{"jp":"置いた","kana":"おいた","ko":"오이타"},"nakatta":{"jp":"置かなかった","kana":"おかなかった","ko":"오카나캇타"}},"koForms":{"base":"두다","te":"두고 (~해서)","masu":"둡니다","masen":"두지 않습니다","mashita":"뒀습니다","masendeshita":"두지 않았습니다","ta":"뒀다","nakatta":"두지 않았다"}},{"group":1,"cat":"く","kanji":"開く","kana":"あく","meaning":"열리다","ko":"아쿠","forms":{"te":{"jp":"開いて","kana":"あいて","ko":"아이테"},"masu":{"jp":"開きます","kana":"あきます","ko":"아키마스"},"masen":{"jp":"開きません","kana":"あきません","ko":"아키마센"},"mashita":{"jp":"開きました","kana":"あきました","ko":"아키마시타"},"masendeshita":{"jp":"開きませんでした","kana":"あきませんでした","ko":"아키마센데시타"},"ta":{"jp":"開いた","kana":"あいた","ko":"아이타"},"nakatta":{"jp":"開かなかった","kana":"あかなかった","ko":"아카나캇타"}},"koForms":{"base":"열리다","te":"열리고 (~해서)","masu":"열립니다","masen":"열리지 않습니다","mashita":"열렸습니다","masendeshita":"열리지 않았습니다","ta":"열렸다","nakatta":"열리지 않았다"}},{"group":1,"cat":"く","kanji":"着く","kana":"つく","meaning":"도착하다","ko":"츠쿠","forms":{"te":{"jp":"着いて","kana":"ついて","ko":"츠이테"},"masu":{"jp":"着きます","kana":"つきます","ko":"츠키마스"},"masen":{"jp":"着きません","kana":"つきません","ko":"츠키마센"},"mashita":{"jp":"着きました","kana":"つきました","ko":"츠키마시타"},"masendeshita":{"jp":"着きませんでした","kana":"つきませんでした","ko":"츠키마센데시타"},"ta":{"jp":"着いた","kana":"ついた","ko":"츠이타"},"nakatta":{"jp":"着かなかった","kana":"つかなかった","ko":"츠카나캇타"}},"koForms":{"base":"도착하다","te":"도착하고 (~해서)","masu":"도착합니다","masen":"도착하지 않습니다","mashita":"도착했습니다","masendeshita":"도착하지 않았습니다","ta":"도착했다","nakatta":"도착하지 않았다"}},{"group":1,"cat":"く (특수)","kanji":"行く","kana":"いく","meaning":"가다","ko":"이쿠","forms":{"te":{"jp":"行って","kana":"いって","ko":"잇테"},"masu":{"jp":"行きます","kana":"いきます","ko":"이키마스"},"masen":{"jp":"行きません","kana":"いきません","ko":"이키마센"},"mashita":{"jp":"行きました","kana":"いきました","ko":"이키마시타"},"masendeshita":{"jp":"行きませんでした","kana":"いきませんでした","ko":"이키마센데시타"},"ta":{"jp":"行った","kana":"いった","ko":"잇타"},"nakatta":{"jp":"行かなかった","kana":"いかなかった","ko":"이카나캇타"}},"koForms":{"base":"가다","te":"가고 (~해서)","masu":"갑니다","masen":"가지 않습니다","mashita":"갔습니다","masendeshita":"가지 않았습니다","ta":"갔다","nakatta":"가지 않았다"}},{"group":1,"cat":"ぐ","kanji":"泳ぐ","kana":"およぐ","meaning":"수영하다","ko":"오요구","forms":{"te":{"jp":"泳いで","kana":"およいで","ko":"오요이데"},"masu":{"jp":"泳ぎます","kana":"およぎます","ko":"오요기마스"},"masen":{"jp":"泳ぎません","kana":"およぎません","ko":"오요기마센"},"mashita":{"jp":"泳ぎました","kana":"およぎました","ko":"오요기마시타"},"masendeshita":{"jp":"泳ぎませんでした","kana":"およぎませんでした","ko":"오요기마센데시타"},"ta":{"jp":"泳いだ","kana":"およいだ","ko":"오요이다"},"nakatta":{"jp":"泳がなかった","kana":"およがなかった","ko":"오요가나캇타"}},"koForms":{"base":"수영하다","te":"수영하고 (~해서)","masu":"수영합니다","masen":"수영하지 않습니다","mashita":"수영했습니다","masendeshita":"수영하지 않았습니다","ta":"수영했다","nakatta":"수영하지 않았다"}},{"group":1,"cat":"ぐ","kanji":"急ぐ","kana":"いそぐ","meaning":"서두르다","ko":"이소구","forms":{"te":{"jp":"急いで","kana":"いそいで","ko":"이소이데"},"masu":{"jp":"急ぎます","kana":"いそぎます","ko":"이소기마스"},"masen":{"jp":"急ぎません","kana":"いそぎません","ko":"이소기마센"},"mashita":{"jp":"急ぎました","kana":"いそぎました","ko":"이소기마시타"},"masendeshita":{"jp":"急ぎませんでした","kana":"いそぎませんでした","ko":"이소기마센데시타"},"ta":{"jp":"急いだ","kana":"いそいだ","ko":"이소이다"},"nakatta":{"jp":"急がなかった","kana":"いそがなかった","ko":"이소가나캇타"}},"koForms":{"base":"서두르다","te":"서두르고 (~해서)","masu":"서두릅니다","masen":"서두르지 않습니다","mashita":"서둘렀습니다","masendeshita":"서두르지 않았습니다","ta":"서둘렀다","nakatta":"서두르지 않았다"}},{"group":1,"cat":"ぐ","kanji":"脱ぐ","kana":"ぬぐ","meaning":"벗다","ko":"누구","forms":{"te":{"jp":"脱いで","kana":"ぬいで","ko":"누이데"},"masu":{"jp":"脱ぎます","kana":"ぬぎます","ko":"누기마스"},"masen":{"jp":"脱ぎません","kana":"ぬぎません","ko":"누기마센"},"mashita":{"jp":"脱ぎました","kana":"ぬぎました","ko":"누기마시타"},"masendeshita":{"jp":"脱ぎませんでした","kana":"ぬぎませんでした","ko":"누기마센데시타"},"ta":{"jp":"脱いだ","kana":"ぬいだ","ko":"누이다"},"nakatta":{"jp":"脱がなかった","kana":"ぬがなかった","ko":"누가나캇타"}},"koForms":{"base":"벗다","te":"벗고 (~해서)","masu":"벗습니다","masen":"벗지 않습니다","mashita":"벗었습니다","masendeshita":"벗지 않았습니다","ta":"벗었다","nakatta":"벗지 않았다"}},{"group":1,"cat":"ぬ","kanji":"死ぬ","kana":"しぬ","meaning":"죽다","ko":"시누","forms":{"te":{"jp":"死んで","kana":"しんで","ko":"신데"},"masu":{"jp":"死にます","kana":"しにます","ko":"시니마스"},"masen":{"jp":"死にません","kana":"しにません","ko":"시니마센"},"mashita":{"jp":"死にました","kana":"しにました","ko":"시니마시타"},"masendeshita":{"jp":"死にませんでした","kana":"しにませんでした","ko":"시니마센데시타"},"ta":{"jp":"死んだ","kana":"しんだ","ko":"신다"},"nakatta":{"jp":"死ななかった","kana":"しななかった","ko":"시나나캇타"}},"koForms":{"base":"죽다","te":"죽고 (~해서)","masu":"죽습니다","masen":"죽지 않습니다","mashita":"죽었습니다","masendeshita":"죽지 않았습니다","ta":"죽었다","nakatta":"죽지 않았다"}},{"group":1,"cat":"ぶ","kanji":"遊ぶ","kana":"あそぶ","meaning":"놀다","ko":"아소부","forms":{"te":{"jp":"遊んで","kana":"あそんで","ko":"아손데"},"masu":{"jp":"遊びます","kana":"あそびます","ko":"아소비마스"},"masen":{"jp":"遊びません","kana":"あそびません","ko":"아소비마센"},"mashita":{"jp":"遊びました","kana":"あそびました","ko":"아소비마시타"},"masendeshita":{"jp":"遊びませんでした","kana":"あそびませんでした","ko":"아소비마센데시타"},"ta":{"jp":"遊んだ","kana":"あそんだ","ko":"아손다"},"nakatta":{"jp":"遊ばなかった","kana":"あそばなかった","ko":"아소바나캇타"}},"koForms":{"base":"놀다","te":"놀고 (~해서)","masu":"놉니다","masen":"놀지 않습니다","mashita":"놀았습니다","masendeshita":"놀지 않았습니다","ta":"놀았다","nakatta":"놀지 않았다"}},{"group":1,"cat":"ぶ","kanji":"呼ぶ","kana":"よぶ","meaning":"부르다","ko":"요부","forms":{"te":{"jp":"呼んで","kana":"よんで","ko":"욘데"},"masu":{"jp":"呼びます","kana":"よびます","ko":"요비마스"},"masen":{"jp":"呼びません","kana":"よびません","ko":"요비마센"},"mashita":{"jp":"呼びました","kana":"よびました","ko":"요비마시타"},"masendeshita":{"jp":"呼びませんでした","kana":"よびませんでした","ko":"요비마센데시타"},"ta":{"jp":"呼んだ","kana":"よんだ","ko":"욘다"},"nakatta":{"jp":"呼ばなかった","kana":"よばなかった","ko":"요바나캇타"}},"koForms":{"base":"부르다","te":"부르고 (~해서)","masu":"부릅니다","masen":"부르지 않습니다","mashita":"불렀습니다","masendeshita":"부르지 않았습니다","ta":"불렀다","nakatta":"부르지 않았다"}},{"group":1,"cat":"ぶ","kanji":"飛ぶ","kana":"とぶ","meaning":"날다","ko":"토부","forms":{"te":{"jp":"飛んで","kana":"とんで","ko":"톤데"},"masu":{"jp":"飛びます","kana":"とびます","ko":"토비마스"},"masen":{"jp":"飛びません","kana":"とびません","ko":"토비마센"},"mashita":{"jp":"飛びました","kana":"とびました","ko":"토비마시타"},"masendeshita":{"jp":"飛びませんでした","kana":"とびませんでした","ko":"토비마센데시타"},"ta":{"jp":"飛んだ","kana":"とんだ","ko":"톤다"},"nakatta":{"jp":"飛ばなかった","kana":"とばなかった","ko":"토바나캇타"}},"koForms":{"base":"날다","te":"날고 (~해서)","masu":"납니다","masen":"날지 않습니다","mashita":"날았습니다","masendeshita":"날지 않았습니다","ta":"날았다","nakatta":"날지 않았다"}},{"group":1,"cat":"ぶ","kanji":"選ぶ","kana":"えらぶ","meaning":"고르다","ko":"에라부","forms":{"te":{"jp":"選んで","kana":"えらんで","ko":"에란데"},"masu":{"jp":"選びます","kana":"えらびます","ko":"에라비마스"},"masen":{"jp":"選びません","kana":"えらびません","ko":"에라비마센"},"mashita":{"jp":"選びました","kana":"えらびました","ko":"에라비마시타"},"masendeshita":{"jp":"選びませんでした","kana":"えらびませんでした","ko":"에라비마센데시타"},"ta":{"jp":"選んだ","kana":"えらんだ","ko":"에란다"},"nakatta":{"jp":"選ばなかった","kana":"えらばなかった","ko":"에라바나캇타"}},"koForms":{"base":"고르다","te":"고르고 (~해서)","masu":"고릅니다","masen":"고르지 않습니다","mashita":"골랐습니다","masendeshita":"고르지 않았습니다","ta":"골랐다","nakatta":"고르지 않았다"}},{"group":1,"cat":"む","kanji":"飲む","kana":"のむ","meaning":"마시다","ko":"노무","forms":{"te":{"jp":"飲んで","kana":"のんで","ko":"논데"},"masu":{"jp":"飲みます","kana":"のみます","ko":"노미마스"},"masen":{"jp":"飲みません","kana":"のみません","ko":"노미마센"},"mashita":{"jp":"飲みました","kana":"のみました","ko":"노미마시타"},"masendeshita":{"jp":"飲みませんでした","kana":"のみませんでした","ko":"노미마센데시타"},"ta":{"jp":"飲んだ","kana":"のんだ","ko":"논다"},"nakatta":{"jp":"飲まなかった","kana":"のまなかった","ko":"노마나캇타"}},"koForms":{"base":"마시다","te":"마시고 (~해서)","masu":"마십니다","masen":"마시지 않습니다","mashita":"마셨습니다","masendeshita":"마시지 않았습니다","ta":"마셨다","nakatta":"마시지 않았다"}},{"group":1,"cat":"む","kanji":"読む","kana":"よむ","meaning":"읽다","ko":"요무","forms":{"te":{"jp":"読んで","kana":"よんで","ko":"욘데"},"masu":{"jp":"読みます","kana":"よみます","ko":"요미마스"},"masen":{"jp":"読みません","kana":"よみません","ko":"요미마센"},"mashita":{"jp":"読みました","kana":"よみました","ko":"요미마시타"},"masendeshita":{"jp":"読みませんでした","kana":"よみませんでした","ko":"요미마센데시타"},"ta":{"jp":"読んだ","kana":"よんだ","ko":"욘다"},"nakatta":{"jp":"読まなかった","kana":"よまなかった","ko":"요마나캇타"}},"koForms":{"base":"읽다","te":"읽고 (~해서)","masu":"읽습니다","masen":"읽지 않습니다","mashita":"읽었습니다","masendeshita":"읽지 않았습니다","ta":"읽었다","nakatta":"읽지 않았다"}},{"group":1,"cat":"む","kanji":"住む","kana":"すむ","meaning":"살다, 거주하다","ko":"스무","forms":{"te":{"jp":"住んで","kana":"すんで","ko":"슨데"},"masu":{"jp":"住みます","kana":"すみます","ko":"스미마스"},"masen":{"jp":"住みません","kana":"すみません","ko":"스미마센"},"mashita":{"jp":"住みました","kana":"すみました","ko":"스미마시타"},"masendeshita":{"jp":"住みませんでした","kana":"すみませんでした","ko":"스미마센데시타"},"ta":{"jp":"住んだ","kana":"すんだ","ko":"슨다"},"nakatta":{"jp":"住まなかった","kana":"すまなかった","ko":"스마나캇타"}},"koForms":{"base":"살다","te":"살고 (~해서)","masu":"삽니다","masen":"살지 않습니다","mashita":"살았습니다","masendeshita":"살지 않았습니다","ta":"살았다","nakatta":"살지 않았다"}},{"group":1,"cat":"む","kanji":"休む","kana":"やすむ","meaning":"쉬다","ko":"야스무","forms":{"te":{"jp":"休んで","kana":"やすんで","ko":"야슨데"},"masu":{"jp":"休みます","kana":"やすみます","ko":"야스미마스"},"masen":{"jp":"休みません","kana":"やすみません","ko":"야스미마센"},"mashita":{"jp":"休みました","kana":"やすみました","ko":"야스미마시타"},"masendeshita":{"jp":"休みませんでした","kana":"やすみませんでした","ko":"야스미마센데시타"},"ta":{"jp":"休んだ","kana":"やすんだ","ko":"야슨다"},"nakatta":{"jp":"休まなかった","kana":"やすまなかった","ko":"야스마나캇타"}},"koForms":{"base":"쉬다","te":"쉬고 (~해서)","masu":"쉽니다","masen":"쉬지 않습니다","mashita":"쉬었습니다","masendeshita":"쉬지 않았습니다","ta":"쉬었다","nakatta":"쉬지 않았다"}},{"group":1,"cat":"む","kanji":"頼む","kana":"たのむ","meaning":"부탁하다","ko":"타노무","forms":{"te":{"jp":"頼んで","kana":"たのんで","ko":"타논데"},"masu":{"jp":"頼みます","kana":"たのみます","ko":"타노미마스"},"masen":{"jp":"頼みません","kana":"たのみません","ko":"타노미마센"},"mashita":{"jp":"頼みました","kana":"たのみました","ko":"타노미마시타"},"masendeshita":{"jp":"頼みませんでした","kana":"たのみませんでした","ko":"타노미마센데시타"},"ta":{"jp":"頼んだ","kana":"たのんだ","ko":"타논다"},"nakatta":{"jp":"頼まなかった","kana":"たのまなかった","ko":"타노마나캇타"}},"koForms":{"base":"부탁하다","te":"부탁하고 (~해서)","masu":"부탁합니다","masen":"부탁하지 않습니다","mashita":"부탁했습니다","masendeshita":"부탁하지 않았습니다","ta":"부탁했다","nakatta":"부탁하지 않았다"}},{"group":1,"cat":"す","kanji":"話す","kana":"はなす","meaning":"말하다, 이야기하다","ko":"하나스","forms":{"te":{"jp":"話して","kana":"はなして","ko":"하나시테"},"masu":{"jp":"話します","kana":"はなします","ko":"하나시마스"},"masen":{"jp":"話しません","kana":"はなしません","ko":"하나시마센"},"mashita":{"jp":"話しました","kana":"はなしました","ko":"하나시마시타"},"masendeshita":{"jp":"話しませんでした","kana":"はなしませんでした","ko":"하나시마센데시타"},"ta":{"jp":"話した","kana":"はなした","ko":"하나시타"},"nakatta":{"jp":"話さなかった","kana":"はなさなかった","ko":"하나사나캇타"}},"koForms":{"base":"말하다","te":"말하고 (~해서)","masu":"말합니다","masen":"말하지 않습니다","mashita":"말했습니다","masendeshita":"말하지 않았습니다","ta":"말했다","nakatta":"말하지 않았다"}},{"group":1,"cat":"す","kanji":"貸す","kana":"かす","meaning":"빌려주다","ko":"카스","forms":{"te":{"jp":"貸して","kana":"かして","ko":"카시테"},"masu":{"jp":"貸します","kana":"かします","ko":"카시마스"},"masen":{"jp":"貸しません","kana":"かしません","ko":"카시마센"},"mashita":{"jp":"貸しました","kana":"かしました","ko":"카시마시타"},"masendeshita":{"jp":"貸しませんでした","kana":"かしませんでした","ko":"카시마센데시타"},"ta":{"jp":"貸した","kana":"かした","ko":"카시타"},"nakatta":{"jp":"貸さなかった","kana":"かさなかった","ko":"카사나캇타"}},"koForms":{"base":"빌려주다","te":"빌려주고 (~해서)","masu":"빌려줍니다","masen":"빌려주지 않습니다","mashita":"빌려줬습니다","masendeshita":"빌려주지 않았습니다","ta":"빌려줬다","nakatta":"빌려주지 않았다"}},{"group":1,"cat":"す","kanji":"出す","kana":"だす","meaning":"내다, 제출하다","ko":"다스","forms":{"te":{"jp":"出して","kana":"だして","ko":"다시테"},"masu":{"jp":"出します","kana":"だします","ko":"다시마스"},"masen":{"jp":"出しません","kana":"だしません","ko":"다시마센"},"mashita":{"jp":"出しました","kana":"だしました","ko":"다시마시타"},"masendeshita":{"jp":"出しませんでした","kana":"だしませんでした","ko":"다시마센데시타"},"ta":{"jp":"出した","kana":"だした","ko":"다시타"},"nakatta":{"jp":"出さなかった","kana":"ださなかった","ko":"다사나캇타"}},"koForms":{"base":"내다","te":"내고 (~해서)","masu":"냅니다","masen":"내지 않습니다","mashita":"냈습니다","masendeshita":"내지 않았습니다","ta":"냈다","nakatta":"내지 않았다"}},{"group":1,"cat":"す","kanji":"消す","kana":"けす","meaning":"끄다, 지우다","ko":"케스","forms":{"te":{"jp":"消して","kana":"けして","ko":"케시테"},"masu":{"jp":"消します","kana":"けします","ko":"케시마스"},"masen":{"jp":"消しません","kana":"けしません","ko":"케시마센"},"mashita":{"jp":"消しました","kana":"けしました","ko":"케시마시타"},"masendeshita":{"jp":"消しませんでした","kana":"けしませんでした","ko":"케시마센데시타"},"ta":{"jp":"消した","kana":"けした","ko":"케시타"},"nakatta":{"jp":"消さなかった","kana":"けさなかった","ko":"케사나캇타"}},"koForms":{"base":"끄다","te":"끄고 (~해서)","masu":"끕니다","masen":"끄지 않습니다","mashita":"껐습니다","masendeshita":"끄지 않았습니다","ta":"껐다","nakatta":"끄지 않았다"}},{"group":1,"cat":"す","kanji":"押す","kana":"おす","meaning":"누르다, 밀다","ko":"오스","forms":{"te":{"jp":"押して","kana":"おして","ko":"오시테"},"masu":{"jp":"押します","kana":"おします","ko":"오시마스"},"masen":{"jp":"押しません","kana":"おしません","ko":"오시마센"},"mashita":{"jp":"押しました","kana":"おしました","ko":"오시마시타"},"masendeshita":{"jp":"押しませんでした","kana":"おしませんでした","ko":"오시마센데시타"},"ta":{"jp":"押した","kana":"おした","ko":"오시타"},"nakatta":{"jp":"押さなかった","kana":"おさなかった","ko":"오사나캇타"}},"koForms":{"base":"누르다","te":"누르고 (~해서)","masu":"누릅니다","masen":"누르지 않습니다","mashita":"눌렀습니다","masendeshita":"누르지 않았습니다","ta":"눌렀다","nakatta":"누르지 않았다"}},{"group":2,"cat":"い단+る","kanji":"起きる","kana":"おきる","meaning":"일어나다","ko":"오키루","forms":{"te":{"jp":"起きて","kana":"おきて","ko":"오키테"},"masu":{"jp":"起きます","kana":"おきます","ko":"오키마스"},"masen":{"jp":"起きません","kana":"おきません","ko":"오키마센"},"mashita":{"jp":"起きました","kana":"おきました","ko":"오키마시타"},"masendeshita":{"jp":"起きませんでした","kana":"おきませんでした","ko":"오키마센데시타"},"ta":{"jp":"起きた","kana":"おきた","ko":"오키타"},"nakatta":{"jp":"起きなかった","kana":"おきなかった","ko":"오키나캇타"}},"koForms":{"base":"일어나다","te":"일어나고 (~해서)","masu":"일어납니다","masen":"일어나지 않습니다","mashita":"일어났습니다","masendeshita":"일어나지 않았습니다","ta":"일어났다","nakatta":"일어나지 않았다"}},{"group":2,"cat":"い단+る","kanji":"見る","kana":"みる","meaning":"보다","ko":"미루","forms":{"te":{"jp":"見て","kana":"みて","ko":"미테"},"masu":{"jp":"見ます","kana":"みます","ko":"미마스"},"masen":{"jp":"見ません","kana":"みません","ko":"미마센"},"mashita":{"jp":"見ました","kana":"みました","ko":"미마시타"},"masendeshita":{"jp":"見ませんでした","kana":"みませんでした","ko":"미마센데시타"},"ta":{"jp":"見た","kana":"みた","ko":"미타"},"nakatta":{"jp":"見なかった","kana":"みなかった","ko":"미나캇타"}},"koForms":{"base":"보다","te":"보고 (~해서)","masu":"봅니다","masen":"보지 않습니다","mashita":"봤습니다","masendeshita":"보지 않았습니다","ta":"봤다","nakatta":"보지 않았다"}},{"group":2,"cat":"い단+る","kanji":"着る","kana":"きる","meaning":"입다","ko":"키루","forms":{"te":{"jp":"着て","kana":"きて","ko":"키테"},"masu":{"jp":"着ます","kana":"きます","ko":"키마스"},"masen":{"jp":"着ません","kana":"きません","ko":"키마센"},"mashita":{"jp":"着ました","kana":"きました","ko":"키마시타"},"masendeshita":{"jp":"着ませんでした","kana":"きませんでした","ko":"키마센데시타"},"ta":{"jp":"着た","kana":"きた","ko":"키타"},"nakatta":{"jp":"着なかった","kana":"きなかった","ko":"키나캇타"}},"koForms":{"base":"입다","te":"입고 (~해서)","masu":"입습니다","masen":"입지 않습니다","mashita":"입었습니다","masendeshita":"입지 않았습니다","ta":"입었다","nakatta":"입지 않았다"}},{"group":2,"cat":"い단+る","kanji":"借りる","kana":"かりる","meaning":"빌리다","ko":"카리루","forms":{"te":{"jp":"借りて","kana":"かりて","ko":"카리테"},"masu":{"jp":"借ります","kana":"かります","ko":"카리마스"},"masen":{"jp":"借りません","kana":"かりません","ko":"카리마센"},"mashita":{"jp":"借りました","kana":"かりました","ko":"카리마시타"},"masendeshita":{"jp":"借りませんでした","kana":"かりませんでした","ko":"카리마센데시타"},"ta":{"jp":"借りた","kana":"かりた","ko":"카리타"},"nakatta":{"jp":"借りなかった","kana":"かりなかった","ko":"카리나캇타"}},"koForms":{"base":"빌리다","te":"빌리고 (~해서)","masu":"빌립니다","masen":"빌리지 않습니다","mashita":"빌렸습니다","masendeshita":"빌리지 않았습니다","ta":"빌렸다","nakatta":"빌리지 않았다"}},{"group":2,"cat":"い단+る","kanji":"降りる","kana":"おりる","meaning":"내리다","ko":"오리루","forms":{"te":{"jp":"降りて","kana":"おりて","ko":"오리테"},"masu":{"jp":"降ります","kana":"おります","ko":"오리마스"},"masen":{"jp":"降りません","kana":"おりません","ko":"오리마센"},"mashita":{"jp":"降りました","kana":"おりました","ko":"오리마시타"},"masendeshita":{"jp":"降りませんでした","kana":"おりませんでした","ko":"오리마센데시타"},"ta":{"jp":"降りた","kana":"おりた","ko":"오리타"},"nakatta":{"jp":"降りなかった","kana":"おりなかった","ko":"오리나캇타"}},"koForms":{"base":"내리다","te":"내리고 (~해서)","masu":"내립니다","masen":"내리지 않습니다","mashita":"내렸습니다","masendeshita":"내리지 않았습니다","ta":"내렸다","nakatta":"내리지 않았다"}},{"group":2,"cat":"い단+る","kanji":"浴びる","kana":"あびる","meaning":"(샤워를) 하다, 뒤집어쓰다","ko":"아비루","forms":{"te":{"jp":"浴びて","kana":"あびて","ko":"아비테"},"masu":{"jp":"浴びます","kana":"あびます","ko":"아비마스"},"masen":{"jp":"浴びません","kana":"あびません","ko":"아비마센"},"mashita":{"jp":"浴びました","kana":"あびました","ko":"아비마시타"},"masendeshita":{"jp":"浴びませんでした","kana":"あびませんでした","ko":"아비마센데시타"},"ta":{"jp":"浴びた","kana":"あびた","ko":"아비타"},"nakatta":{"jp":"浴びなかった","kana":"あびなかった","ko":"아비나캇타"}},"koForms":{"base":"(샤워를) 하다","te":"(샤워를) 하고 (~해서)","masu":"(샤워를) 합니다","masen":"(샤워를) 하지 않습니다","mashita":"(샤워를) 했습니다","masendeshita":"(샤워를) 하지 않았습니다","ta":"(샤워를) 했다","nakatta":"(샤워를) 하지 않았다"}},{"group":2,"cat":"い단+る","kanji":"できる","kana":"できる","meaning":"할 수 있다","ko":"데키루","forms":{"te":{"jp":"できて","kana":"できて","ko":"데키테"},"masu":{"jp":"できます","kana":"できます","ko":"데키마스"},"masen":{"jp":"できません","kana":"できません","ko":"데키마센"},"mashita":{"jp":"できました","kana":"できました","ko":"데키마시타"},"masendeshita":{"jp":"できませんでした","kana":"できませんでした","ko":"데키마센데시타"},"ta":{"jp":"できた","kana":"できた","ko":"데키타"},"nakatta":{"jp":"できなかった","kana":"できなかった","ko":"데키나캇타"}},"koForms":{"base":"할 수 있다","te":"할 수 있고 (~해서)","masu":"할 수 있습니다","masen":"할 수 있지 않습니다","mashita":"할 수 있었습니다","masendeshita":"할 수 있지 않았습니다","ta":"할 수 있었다","nakatta":"할 수 있지 않았다"}},{"group":2,"cat":"い단+る","kanji":"足りる","kana":"たりる","meaning":"충분하다","ko":"타리루","forms":{"te":{"jp":"足りて","kana":"たりて","ko":"타리테"},"masu":{"jp":"足ります","kana":"たります","ko":"타리마스"},"masen":{"jp":"足りません","kana":"たりません","ko":"타리마센"},"mashita":{"jp":"足りました","kana":"たりました","ko":"타리마시타"},"masendeshita":{"jp":"足りませんでした","kana":"たりませんでした","ko":"타리마센데시타"},"ta":{"jp":"足りた","kana":"たりた","ko":"타리타"},"nakatta":{"jp":"足りなかった","kana":"たりなかった","ko":"타리나캇타"}},"koForms":{"base":"충분하다","te":"충분하고 (~해서)","masu":"충분합니다","masen":"충분하지 않습니다","mashita":"충분했습니다","masendeshita":"충분하지 않았습니다","ta":"충분했다","nakatta":"충분하지 않았다"}},{"group":2,"cat":"い단+る","kanji":"生きる","kana":"いきる","meaning":"살다, 살아가다","ko":"이키루","forms":{"te":{"jp":"生きて","kana":"いきて","ko":"이키테"},"masu":{"jp":"生きます","kana":"いきます","ko":"이키마스"},"masen":{"jp":"生きません","kana":"いきません","ko":"이키마센"},"mashita":{"jp":"生きました","kana":"いきました","ko":"이키마시타"},"masendeshita":{"jp":"生きませんでした","kana":"いきませんでした","ko":"이키마센데시타"},"ta":{"jp":"生きた","kana":"いきた","ko":"이키타"},"nakatta":{"jp":"生きなかった","kana":"いきなかった","ko":"이키나캇타"}},"koForms":{"base":"살다","te":"살고 (~해서)","masu":"삽니다","masen":"살지 않습니다","mashita":"살았습니다","masendeshita":"살지 않았습니다","ta":"살았다","nakatta":"살지 않았다"}},{"group":2,"cat":"い단+る","kanji":"信じる","kana":"しんじる","meaning":"믿다","ko":"신지루","forms":{"te":{"jp":"信じて","kana":"しんじて","ko":"신지테"},"masu":{"jp":"信じます","kana":"しんじます","ko":"신지마스"},"masen":{"jp":"信じません","kana":"しんじません","ko":"신지마센"},"mashita":{"jp":"信じました","kana":"しんじました","ko":"신지마시타"},"masendeshita":{"jp":"信じませんでした","kana":"しんじませんでした","ko":"신지마센데시타"},"ta":{"jp":"信じた","kana":"しんじた","ko":"신지타"},"nakatta":{"jp":"信じなかった","kana":"しんじなかった","ko":"신지나캇타"}},"koForms":{"base":"믿다","te":"믿고 (~해서)","masu":"믿습니다","masen":"믿지 않습니다","mashita":"믿었습니다","masendeshita":"믿지 않았습니다","ta":"믿었다","nakatta":"믿지 않았다"}},{"group":2,"cat":"い단+る","kanji":"落ちる","kana":"おちる","meaning":"떨어지다","ko":"오치루","forms":{"te":{"jp":"落ちて","kana":"おちて","ko":"오치테"},"masu":{"jp":"落ちます","kana":"おちます","ko":"오치마스"},"masen":{"jp":"落ちません","kana":"おちません","ko":"오치마센"},"mashita":{"jp":"落ちました","kana":"おちました","ko":"오치마시타"},"masendeshita":{"jp":"落ちませんでした","kana":"おちませんでした","ko":"오치마센데시타"},"ta":{"jp":"落ちた","kana":"おちた","ko":"오치타"},"nakatta":{"jp":"落ちなかった","kana":"おちなかった","ko":"오치나캇타"}},"koForms":{"base":"떨어지다","te":"떨어지고 (~해서)","masu":"떨어집니다","masen":"떨어지지 않습니다","mashita":"떨어졌습니다","masendeshita":"떨어지지 않았습니다","ta":"떨어졌다","nakatta":"떨어지지 않았다"}},{"group":2,"cat":"い단+る","kanji":"いる","kana":"いる","meaning":"있다 (사람·동물)","ko":"이루","forms":{"te":{"jp":"いて","kana":"いて","ko":"이테"},"masu":{"jp":"います","kana":"います","ko":"이마스"},"masen":{"jp":"いません","kana":"いません","ko":"이마센"},"mashita":{"jp":"いました","kana":"いました","ko":"이마시타"},"masendeshita":{"jp":"いませんでした","kana":"いませんでした","ko":"이마센데시타"},"ta":{"jp":"いた","kana":"いた","ko":"이타"},"nakatta":{"jp":"いなかった","kana":"いなかった","ko":"이나캇타"}},"koForms":{"base":"있다","te":"있고 (~해서)","masu":"있습니다","masen":"있지 않습니다","mashita":"있었습니다","masendeshita":"있지 않았습니다","ta":"있었다","nakatta":"있지 않았다"}},{"group":2,"cat":"い단+る","kanji":"似る","kana":"にる","meaning":"닮다","ko":"니루","forms":{"te":{"jp":"似て","kana":"にて","ko":"니테"},"masu":{"jp":"似ます","kana":"にます","ko":"니마스"},"masen":{"jp":"似ません","kana":"にません","ko":"니마센"},"mashita":{"jp":"似ました","kana":"にました","ko":"니마시타"},"masendeshita":{"jp":"似ませんでした","kana":"にませんでした","ko":"니마센데시타"},"ta":{"jp":"似た","kana":"にた","ko":"니타"},"nakatta":{"jp":"似なかった","kana":"になかった","ko":"니나캇타"}},"koForms":{"base":"닮다","te":"닮고 (~해서)","masu":"닮습니다","masen":"닮지 않습니다","mashita":"닮았습니다","masendeshita":"닮지 않았습니다","ta":"닮았다","nakatta":"닮지 않았다"}},{"group":2,"cat":"い단+る","kanji":"感じる","kana":"かんじる","meaning":"느끼다","ko":"칸지루","forms":{"te":{"jp":"感じて","kana":"かんじて","ko":"칸지테"},"masu":{"jp":"感じます","kana":"かんじます","ko":"칸지마스"},"masen":{"jp":"感じません","kana":"かんじません","ko":"칸지마센"},"mashita":{"jp":"感じました","kana":"かんじました","ko":"칸지마시타"},"masendeshita":{"jp":"感じませんでした","kana":"かんじませんでした","ko":"칸지마센데시타"},"ta":{"jp":"感じた","kana":"かんじた","ko":"칸지타"},"nakatta":{"jp":"感じなかった","kana":"かんじなかった","ko":"칸지나캇타"}},"koForms":{"base":"느끼다","te":"느끼고 (~해서)","masu":"느낍니다","masen":"느끼지 않습니다","mashita":"느꼈습니다","masendeshita":"느끼지 않았습니다","ta":"느꼈다","nakatta":"느끼지 않았다"}},{"group":2,"cat":"い단+る","kanji":"過ぎる","kana":"すぎる","meaning":"지나다","ko":"스기루","forms":{"te":{"jp":"過ぎて","kana":"すぎて","ko":"스기테"},"masu":{"jp":"過ぎます","kana":"すぎます","ko":"스기마스"},"masen":{"jp":"過ぎません","kana":"すぎません","ko":"스기마센"},"mashita":{"jp":"過ぎました","kana":"すぎました","ko":"스기마시타"},"masendeshita":{"jp":"過ぎませんでした","kana":"すぎませんでした","ko":"스기마센데시타"},"ta":{"jp":"過ぎた","kana":"すぎた","ko":"스기타"},"nakatta":{"jp":"過ぎなかった","kana":"すぎなかった","ko":"스기나캇타"}},"koForms":{"base":"지나다","te":"지나고 (~해서)","masu":"지납니다","masen":"지나지 않습니다","mashita":"지났습니다","masendeshita":"지나지 않았습니다","ta":"지났다","nakatta":"지나지 않았다"}},{"group":2,"cat":"え단+る","kanji":"食べる","kana":"たべる","meaning":"먹다","ko":"타베루","forms":{"te":{"jp":"食べて","kana":"たべて","ko":"타베테"},"masu":{"jp":"食べます","kana":"たべます","ko":"타베마스"},"masen":{"jp":"食べません","kana":"たべません","ko":"타베마센"},"mashita":{"jp":"食べました","kana":"たべました","ko":"타베마시타"},"masendeshita":{"jp":"食べませんでした","kana":"たべませんでした","ko":"타베마센데시타"},"ta":{"jp":"食べた","kana":"たべた","ko":"타베타"},"nakatta":{"jp":"食べなかった","kana":"たべなかった","ko":"타베나캇타"}},"koForms":{"base":"먹다","te":"먹고 (~해서)","masu":"먹습니다","masen":"먹지 않습니다","mashita":"먹었습니다","masendeshita":"먹지 않았습니다","ta":"먹었다","nakatta":"먹지 않았다"}},{"group":2,"cat":"え단+る","kanji":"寝る","kana":"ねる","meaning":"자다","ko":"네루","forms":{"te":{"jp":"寝て","kana":"ねて","ko":"네테"},"masu":{"jp":"寝ます","kana":"ねます","ko":"네마스"},"masen":{"jp":"寝ません","kana":"ねません","ko":"네마센"},"mashita":{"jp":"寝ました","kana":"ねました","ko":"네마시타"},"masendeshita":{"jp":"寝ませんでした","kana":"ねませんでした","ko":"네마센데시타"},"ta":{"jp":"寝た","kana":"ねた","ko":"네타"},"nakatta":{"jp":"寝なかった","kana":"ねなかった","ko":"네나캇타"}},"koForms":{"base":"자다","te":"자고 (~해서)","masu":"잡니다","masen":"자지 않습니다","mashita":"잤습니다","masendeshita":"자지 않았습니다","ta":"잤다","nakatta":"자지 않았다"}},{"group":2,"cat":"え단+る","kanji":"出る","kana":"でる","meaning":"나가다, 나오다","ko":"데루","forms":{"te":{"jp":"出て","kana":"でて","ko":"데테"},"masu":{"jp":"出ます","kana":"でます","ko":"데마스"},"masen":{"jp":"出ません","kana":"でません","ko":"데마센"},"mashita":{"jp":"出ました","kana":"でました","ko":"데마시타"},"masendeshita":{"jp":"出ませんでした","kana":"でませんでした","ko":"데마센데시타"},"ta":{"jp":"出た","kana":"でた","ko":"데타"},"nakatta":{"jp":"出なかった","kana":"でなかった","ko":"데나캇타"}},"koForms":{"base":"나가다","te":"나가고 (~해서)","masu":"나갑니다","masen":"나가지 않습니다","mashita":"나갔습니다","masendeshita":"나가지 않았습니다","ta":"나갔다","nakatta":"나가지 않았다"}},{"group":2,"cat":"え단+る","kanji":"教える","kana":"おしえる","meaning":"가르치다","ko":"오시에루","forms":{"te":{"jp":"教えて","kana":"おしえて","ko":"오시에테"},"masu":{"jp":"教えます","kana":"おしえます","ko":"오시에마스"},"masen":{"jp":"教えません","kana":"おしえません","ko":"오시에마센"},"mashita":{"jp":"教えました","kana":"おしえました","ko":"오시에마시타"},"masendeshita":{"jp":"教えませんでした","kana":"おしえませんでした","ko":"오시에마센데시타"},"ta":{"jp":"教えた","kana":"おしえた","ko":"오시에타"},"nakatta":{"jp":"教えなかった","kana":"おしえなかった","ko":"오시에나캇타"}},"koForms":{"base":"가르치다","te":"가르치고 (~해서)","masu":"가르칩니다","masen":"가르치지 않습니다","mashita":"가르쳤습니다","masendeshita":"가르치지 않았습니다","ta":"가르쳤다","nakatta":"가르치지 않았다"}},{"group":2,"cat":"え단+る","kanji":"覚える","kana":"おぼえる","meaning":"외우다, 기억하다","ko":"오보에루","forms":{"te":{"jp":"覚えて","kana":"おぼえて","ko":"오보에테"},"masu":{"jp":"覚えます","kana":"おぼえます","ko":"오보에마스"},"masen":{"jp":"覚えません","kana":"おぼえません","ko":"오보에마센"},"mashita":{"jp":"覚えました","kana":"おぼえました","ko":"오보에마시타"},"masendeshita":{"jp":"覚えませんでした","kana":"おぼえませんでした","ko":"오보에마센데시타"},"ta":{"jp":"覚えた","kana":"おぼえた","ko":"오보에타"},"nakatta":{"jp":"覚えなかった","kana":"おぼえなかった","ko":"오보에나캇타"}},"koForms":{"base":"외우다","te":"외우고 (~해서)","masu":"외웁니다","masen":"외우지 않습니다","mashita":"외웠습니다","masendeshita":"외우지 않았습니다","ta":"외웠다","nakatta":"외우지 않았다"}},{"group":2,"cat":"え단+る","kanji":"忘れる","kana":"わすれる","meaning":"잊다","ko":"와스레루","forms":{"te":{"jp":"忘れて","kana":"わすれて","ko":"와스레테"},"masu":{"jp":"忘れます","kana":"わすれます","ko":"와스레마스"},"masen":{"jp":"忘れません","kana":"わすれません","ko":"와스레마센"},"mashita":{"jp":"忘れました","kana":"わすれました","ko":"와스레마시타"},"masendeshita":{"jp":"忘れませんでした","kana":"わすれませんでした","ko":"와스레마센데시타"},"ta":{"jp":"忘れた","kana":"わすれた","ko":"와스레타"},"nakatta":{"jp":"忘れなかった","kana":"わすれなかった","ko":"와스레나캇타"}},"koForms":{"base":"잊다","te":"잊고 (~해서)","masu":"잊습니다","masen":"잊지 않습니다","mashita":"잊었습니다","masendeshita":"잊지 않았습니다","ta":"잊었다","nakatta":"잊지 않았다"}},{"group":2,"cat":"え단+る","kanji":"開ける","kana":"あける","meaning":"열다","ko":"아케루","forms":{"te":{"jp":"開けて","kana":"あけて","ko":"아케테"},"masu":{"jp":"開けます","kana":"あけます","ko":"아케마스"},"masen":{"jp":"開けません","kana":"あけません","ko":"아케마센"},"mashita":{"jp":"開けました","kana":"あけました","ko":"아케마시타"},"masendeshita":{"jp":"開けませんでした","kana":"あけませんでした","ko":"아케마센데시타"},"ta":{"jp":"開けた","kana":"あけた","ko":"아케타"},"nakatta":{"jp":"開けなかった","kana":"あけなかった","ko":"아케나캇타"}},"koForms":{"base":"열다","te":"열고 (~해서)","masu":"엽니다","masen":"열지 않습니다","mashita":"열었습니다","masendeshita":"열지 않았습니다","ta":"열었다","nakatta":"열지 않았다"}},{"group":2,"cat":"え단+る","kanji":"閉める","kana":"しめる","meaning":"닫다","ko":"시메루","forms":{"te":{"jp":"閉めて","kana":"しめて","ko":"시메테"},"masu":{"jp":"閉めます","kana":"しめます","ko":"시메마스"},"masen":{"jp":"閉めません","kana":"しめません","ko":"시메마센"},"mashita":{"jp":"閉めました","kana":"しめました","ko":"시메마시타"},"masendeshita":{"jp":"閉めませんでした","kana":"しめませんでした","ko":"시메마센데시타"},"ta":{"jp":"閉めた","kana":"しめた","ko":"시메타"},"nakatta":{"jp":"閉めなかった","kana":"しめなかった","ko":"시메나캇타"}},"koForms":{"base":"닫다","te":"닫고 (~해서)","masu":"닫습니다","masen":"닫지 않습니다","mashita":"닫았습니다","masendeshita":"닫지 않았습니다","ta":"닫았다","nakatta":"닫지 않았다"}},{"group":2,"cat":"え단+る","kanji":"始める","kana":"はじめる","meaning":"시작하다","ko":"하지메루","forms":{"te":{"jp":"始めて","kana":"はじめて","ko":"하지메테"},"masu":{"jp":"始めます","kana":"はじめます","ko":"하지메마스"},"masen":{"jp":"始めません","kana":"はじめません","ko":"하지메마센"},"mashita":{"jp":"始めました","kana":"はじめました","ko":"하지메마시타"},"masendeshita":{"jp":"始めませんでした","kana":"はじめませんでした","ko":"하지메마센데시타"},"ta":{"jp":"始めた","kana":"はじめた","ko":"하지메타"},"nakatta":{"jp":"始めなかった","kana":"はじめなかった","ko":"하지메나캇타"}},"koForms":{"base":"시작하다","te":"시작하고 (~해서)","masu":"시작합니다","masen":"시작하지 않습니다","mashita":"시작했습니다","masendeshita":"시작하지 않았습니다","ta":"시작했다","nakatta":"시작하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"見せる","kana":"みせる","meaning":"보여주다","ko":"미세루","forms":{"te":{"jp":"見せて","kana":"みせて","ko":"미세테"},"masu":{"jp":"見せます","kana":"みせます","ko":"미세마스"},"masen":{"jp":"見せません","kana":"みせません","ko":"미세마센"},"mashita":{"jp":"見せました","kana":"みせました","ko":"미세마시타"},"masendeshita":{"jp":"見せませんでした","kana":"みせませんでした","ko":"미세마센데시타"},"ta":{"jp":"見せた","kana":"みせた","ko":"미세타"},"nakatta":{"jp":"見せなかった","kana":"みせなかった","ko":"미세나캇타"}},"koForms":{"base":"보여주다","te":"보여주고 (~해서)","masu":"보여줍니다","masen":"보여주지 않습니다","mashita":"보여줬습니다","masendeshita":"보여주지 않았습니다","ta":"보여줬다","nakatta":"보여주지 않았다"}},{"group":2,"cat":"え단+る","kanji":"答える","kana":"こたえる","meaning":"대답하다","ko":"코타에루","forms":{"te":{"jp":"答えて","kana":"こたえて","ko":"코타에테"},"masu":{"jp":"答えます","kana":"こたえます","ko":"코타에마스"},"masen":{"jp":"答えません","kana":"こたえません","ko":"코타에마센"},"mashita":{"jp":"答えました","kana":"こたえました","ko":"코타에마시타"},"masendeshita":{"jp":"答えませんでした","kana":"こたえませんでした","ko":"코타에마센데시타"},"ta":{"jp":"答えた","kana":"こたえた","ko":"코타에타"},"nakatta":{"jp":"答えなかった","kana":"こたえなかった","ko":"코타에나캇타"}},"koForms":{"base":"대답하다","te":"대답하고 (~해서)","masu":"대답합니다","masen":"대답하지 않습니다","mashita":"대답했습니다","masendeshita":"대답하지 않았습니다","ta":"대답했다","nakatta":"대답하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"考える","kana":"かんがえる","meaning":"생각하다","ko":"칸가에루","forms":{"te":{"jp":"考えて","kana":"かんがえて","ko":"칸가에테"},"masu":{"jp":"考えます","kana":"かんがえます","ko":"칸가에마스"},"masen":{"jp":"考えません","kana":"かんがえません","ko":"칸가에마센"},"mashita":{"jp":"考えました","kana":"かんがえました","ko":"칸가에마시타"},"masendeshita":{"jp":"考えませんでした","kana":"かんがえませんでした","ko":"칸가에마센데시타"},"ta":{"jp":"考えた","kana":"かんがえた","ko":"칸가에타"},"nakatta":{"jp":"考えなかった","kana":"かんがえなかった","ko":"칸가에나캇타"}},"koForms":{"base":"생각하다","te":"생각하고 (~해서)","masu":"생각합니다","masen":"생각하지 않습니다","mashita":"생각했습니다","masendeshita":"생각하지 않았습니다","ta":"생각했다","nakatta":"생각하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"入れる","kana":"いれる","meaning":"넣다","ko":"이레루","forms":{"te":{"jp":"入れて","kana":"いれて","ko":"이레테"},"masu":{"jp":"入れます","kana":"いれます","ko":"이레마스"},"masen":{"jp":"入れません","kana":"いれません","ko":"이레마센"},"mashita":{"jp":"入れました","kana":"いれました","ko":"이레마시타"},"masendeshita":{"jp":"入れませんでした","kana":"いれませんでした","ko":"이레마센데시타"},"ta":{"jp":"入れた","kana":"いれた","ko":"이레타"},"nakatta":{"jp":"入れなかった","kana":"いれなかった","ko":"이레나캇타"}},"koForms":{"base":"넣다","te":"넣고 (~해서)","masu":"넣습니다","masen":"넣지 않습니다","mashita":"넣었습니다","masendeshita":"넣지 않았습니다","ta":"넣었다","nakatta":"넣지 않았다"}},{"group":2,"cat":"え단+る","kanji":"疲れる","kana":"つかれる","meaning":"지치다, 피곤하다","ko":"츠카레루","forms":{"te":{"jp":"疲れて","kana":"つかれて","ko":"츠카레테"},"masu":{"jp":"疲れます","kana":"つかれます","ko":"츠카레마스"},"masen":{"jp":"疲れません","kana":"つかれません","ko":"츠카레마센"},"mashita":{"jp":"疲れました","kana":"つかれました","ko":"츠카레마시타"},"masendeshita":{"jp":"疲れませんでした","kana":"つかれませんでした","ko":"츠카레마센데시타"},"ta":{"jp":"疲れた","kana":"つかれた","ko":"츠카레타"},"nakatta":{"jp":"疲れなかった","kana":"つかれなかった","ko":"츠카레나캇타"}},"koForms":{"base":"지치다","te":"지치고 (~해서)","masu":"지칩니다","masen":"지치지 않습니다","mashita":"지쳤습니다","masendeshita":"지치지 않았습니다","ta":"지쳤다","nakatta":"지치지 않았다"}},{"group":2,"cat":"え단+る","kanji":"決める","kana":"きめる","meaning":"정하다","ko":"키메루","forms":{"te":{"jp":"決めて","kana":"きめて","ko":"키메테"},"masu":{"jp":"決めます","kana":"きめます","ko":"키메마스"},"masen":{"jp":"決めません","kana":"きめません","ko":"키메마센"},"mashita":{"jp":"決めました","kana":"きめました","ko":"키메마시타"},"masendeshita":{"jp":"決めませんでした","kana":"きめませんでした","ko":"키메마센데시타"},"ta":{"jp":"決めた","kana":"きめた","ko":"키메타"},"nakatta":{"jp":"決めなかった","kana":"きめなかった","ko":"키메나캇타"}},"koForms":{"base":"정하다","te":"정하고 (~해서)","masu":"정합니다","masen":"정하지 않습니다","mashita":"정했습니다","masendeshita":"정하지 않았습니다","ta":"정했다","nakatta":"정하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"止める","kana":"とめる","meaning":"세우다, 멈추다","ko":"토메루","forms":{"te":{"jp":"止めて","kana":"とめて","ko":"토메테"},"masu":{"jp":"止めます","kana":"とめます","ko":"토메마스"},"masen":{"jp":"止めません","kana":"とめません","ko":"토메마센"},"mashita":{"jp":"止めました","kana":"とめました","ko":"토메마시타"},"masendeshita":{"jp":"止めませんでした","kana":"とめませんでした","ko":"토메마센데시타"},"ta":{"jp":"止めた","kana":"とめた","ko":"토메타"},"nakatta":{"jp":"止めなかった","kana":"とめなかった","ko":"토메나캇타"}},"koForms":{"base":"세우다","te":"세우고 (~해서)","masu":"세웁니다","masen":"세우지 않습니다","mashita":"세웠습니다","masendeshita":"세우지 않았습니다","ta":"세웠다","nakatta":"세우지 않았다"}},{"group":2,"cat":"え단+る","kanji":"調べる","kana":"しらべる","meaning":"조사하다","ko":"시라베루","forms":{"te":{"jp":"調べて","kana":"しらべて","ko":"시라베테"},"masu":{"jp":"調べます","kana":"しらべます","ko":"시라베마스"},"masen":{"jp":"調べません","kana":"しらべません","ko":"시라베마센"},"mashita":{"jp":"調べました","kana":"しらべました","ko":"시라베마시타"},"masendeshita":{"jp":"調べませんでした","kana":"しらべませんでした","ko":"시라베마센데시타"},"ta":{"jp":"調べた","kana":"しらべた","ko":"시라베타"},"nakatta":{"jp":"調べなかった","kana":"しらべなかった","ko":"시라베나캇타"}},"koForms":{"base":"조사하다","te":"조사하고 (~해서)","masu":"조사합니다","masen":"조사하지 않습니다","mashita":"조사했습니다","masendeshita":"조사하지 않았습니다","ta":"조사했다","nakatta":"조사하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"並べる","kana":"ならべる","meaning":"늘어놓다","ko":"나라베루","forms":{"te":{"jp":"並べて","kana":"ならべて","ko":"나라베테"},"masu":{"jp":"並べます","kana":"ならべます","ko":"나라베마스"},"masen":{"jp":"並べません","kana":"ならべません","ko":"나라베마센"},"mashita":{"jp":"並べました","kana":"ならべました","ko":"나라베마시타"},"masendeshita":{"jp":"並べませんでした","kana":"ならべませんでした","ko":"나라베마센데시타"},"ta":{"jp":"並べた","kana":"ならべた","ko":"나라베타"},"nakatta":{"jp":"並べなかった","kana":"ならべなかった","ko":"나라베나캇타"}},"koForms":{"base":"늘어놓다","te":"늘어놓고 (~해서)","masu":"늘어놓습니다","masen":"늘어놓지 않습니다","mashita":"늘어놓았습니다","masendeshita":"늘어놓지 않았습니다","ta":"늘어놓았다","nakatta":"늘어놓지 않았다"}},{"group":2,"cat":"え단+る","kanji":"比べる","kana":"くらべる","meaning":"비교하다","ko":"쿠라베루","forms":{"te":{"jp":"比べて","kana":"くらべて","ko":"쿠라베테"},"masu":{"jp":"比べます","kana":"くらべます","ko":"쿠라베마스"},"masen":{"jp":"比べません","kana":"くらべません","ko":"쿠라베마센"},"mashita":{"jp":"比べました","kana":"くらべました","ko":"쿠라베마시타"},"masendeshita":{"jp":"比べませんでした","kana":"くらべませんでした","ko":"쿠라베마센데시타"},"ta":{"jp":"比べた","kana":"くらべた","ko":"쿠라베타"},"nakatta":{"jp":"比べなかった","kana":"くらべなかった","ko":"쿠라베나캇타"}},"koForms":{"base":"비교하다","te":"비교하고 (~해서)","masu":"비교합니다","masen":"비교하지 않습니다","mashita":"비교했습니다","masendeshita":"비교하지 않았습니다","ta":"비교했다","nakatta":"비교하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"集める","kana":"あつめる","meaning":"모으다","ko":"아츠메루","forms":{"te":{"jp":"集めて","kana":"あつめて","ko":"아츠메테"},"masu":{"jp":"集めます","kana":"あつめます","ko":"아츠메마스"},"masen":{"jp":"集めません","kana":"あつめません","ko":"아츠메마센"},"mashita":{"jp":"集めました","kana":"あつめました","ko":"아츠메마시타"},"masendeshita":{"jp":"集めませんでした","kana":"あつめませんでした","ko":"아츠메마센데시타"},"ta":{"jp":"集めた","kana":"あつめた","ko":"아츠메타"},"nakatta":{"jp":"集めなかった","kana":"あつめなかった","ko":"아츠메나캇타"}},"koForms":{"base":"모으다","te":"모으고 (~해서)","masu":"모읍니다","masen":"모으지 않습니다","mashita":"모았습니다","masendeshita":"모으지 않았습니다","ta":"모았다","nakatta":"모으지 않았다"}},{"group":2,"cat":"え단+る","kanji":"届ける","kana":"とどける","meaning":"전달하다, 보내다","ko":"토도케루","forms":{"te":{"jp":"届けて","kana":"とどけて","ko":"토도케테"},"masu":{"jp":"届けます","kana":"とどけます","ko":"토도케마스"},"masen":{"jp":"届けません","kana":"とどけません","ko":"토도케마센"},"mashita":{"jp":"届けました","kana":"とどけました","ko":"토도케마시타"},"masendeshita":{"jp":"届けませんでした","kana":"とどけませんでした","ko":"토도케마센데시타"},"ta":{"jp":"届けた","kana":"とどけた","ko":"토도케타"},"nakatta":{"jp":"届けなかった","kana":"とどけなかった","ko":"토도케나캇타"}},"koForms":{"base":"전달하다","te":"전달하고 (~해서)","masu":"전달합니다","masen":"전달하지 않습니다","mashita":"전달했습니다","masendeshita":"전달하지 않았습니다","ta":"전달했다","nakatta":"전달하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"続ける","kana":"つづける","meaning":"계속하다","ko":"츠즈케루","forms":{"te":{"jp":"続けて","kana":"つづけて","ko":"츠즈케테"},"masu":{"jp":"続けます","kana":"つづけます","ko":"츠즈케마스"},"masen":{"jp":"続けません","kana":"つづけません","ko":"츠즈케마센"},"mashita":{"jp":"続けました","kana":"つづけました","ko":"츠즈케마시타"},"masendeshita":{"jp":"続けませんでした","kana":"つづけませんでした","ko":"츠즈케마센데시타"},"ta":{"jp":"続けた","kana":"つづけた","ko":"츠즈케타"},"nakatta":{"jp":"続けなかった","kana":"つづけなかった","ko":"츠즈케나캇타"}},"koForms":{"base":"계속하다","te":"계속하고 (~해서)","masu":"계속합니다","masen":"계속하지 않습니다","mashita":"계속했습니다","masendeshita":"계속하지 않았습니다","ta":"계속했다","nakatta":"계속하지 않았다"}},{"group":2,"cat":"え단+る","kanji":"生まれる","kana":"うまれる","meaning":"태어나다","ko":"우마레루","forms":{"te":{"jp":"生まれて","kana":"うまれて","ko":"우마레테"},"masu":{"jp":"生まれます","kana":"うまれます","ko":"우마레마스"},"masen":{"jp":"生まれません","kana":"うまれません","ko":"우마레마센"},"mashita":{"jp":"生まれました","kana":"うまれました","ko":"우마레마시타"},"masendeshita":{"jp":"生まれませんでした","kana":"うまれませんでした","ko":"우마레마센데시타"},"ta":{"jp":"生まれた","kana":"うまれた","ko":"우마레타"},"nakatta":{"jp":"生まれなかった","kana":"うまれなかった","ko":"우마레나캇타"}},"koForms":{"base":"태어나다","te":"태어나고 (~해서)","masu":"태어납니다","masen":"태어나지 않습니다","mashita":"태어났습니다","masendeshita":"태어나지 않았습니다","ta":"태어났다","nakatta":"태어나지 않았다"}},{"group":2,"cat":"え단+る","kanji":"遅れる","kana":"おくれる","meaning":"늦다","ko":"오쿠레루","forms":{"te":{"jp":"遅れて","kana":"おくれて","ko":"오쿠레테"},"masu":{"jp":"遅れます","kana":"おくれます","ko":"오쿠레마스"},"masen":{"jp":"遅れません","kana":"おくれません","ko":"오쿠레마센"},"mashita":{"jp":"遅れました","kana":"おくれました","ko":"오쿠레마시타"},"masendeshita":{"jp":"遅れませんでした","kana":"おくれませんでした","ko":"오쿠레마센데시타"},"ta":{"jp":"遅れた","kana":"おくれた","ko":"오쿠레타"},"nakatta":{"jp":"遅れなかった","kana":"おくれなかった","ko":"오쿠레나캇타"}},"koForms":{"base":"늦다","te":"늦고 (~해서)","masu":"늦습니다","masen":"늦지 않습니다","mashita":"늦었습니다","masendeshita":"늦지 않았습니다","ta":"늦었다","nakatta":"늦지 않았다"}},{"group":2,"cat":"え단+る","kanji":"晴れる","kana":"はれる","meaning":"(날씨가) 개다","ko":"하레루","forms":{"te":{"jp":"晴れて","kana":"はれて","ko":"하레테"},"masu":{"jp":"晴れます","kana":"はれます","ko":"하레마스"},"masen":{"jp":"晴れません","kana":"はれません","ko":"하레마센"},"mashita":{"jp":"晴れました","kana":"はれました","ko":"하레마시타"},"masendeshita":{"jp":"晴れませんでした","kana":"はれませんでした","ko":"하레마센데시타"},"ta":{"jp":"晴れた","kana":"はれた","ko":"하레타"},"nakatta":{"jp":"晴れなかった","kana":"はれなかった","ko":"하레나캇타"}},"koForms":{"base":"(날씨가) 개다","te":"(날씨가) 개고 (~해서)","masu":"(날씨가) 갭니다","masen":"(날씨가) 개지 않습니다","mashita":"(날씨가) 갰습니다","masendeshita":"(날씨가) 개지 않았습니다","ta":"(날씨가) 갰다","nakatta":"(날씨가) 개지 않았다"}},{"group":2,"cat":"え단+る","kanji":"慣れる","kana":"なれる","meaning":"익숙해지다","ko":"나레루","forms":{"te":{"jp":"慣れて","kana":"なれて","ko":"나레테"},"masu":{"jp":"慣れます","kana":"なれます","ko":"나레마스"},"masen":{"jp":"慣れません","kana":"なれません","ko":"나레마센"},"mashita":{"jp":"慣れました","kana":"なれました","ko":"나레마시타"},"masendeshita":{"jp":"慣れませんでした","kana":"なれませんでした","ko":"나레마센데시타"},"ta":{"jp":"慣れた","kana":"なれた","ko":"나레타"},"nakatta":{"jp":"慣れなかった","kana":"なれなかった","ko":"나레나캇타"}},"koForms":{"base":"익숙해지다","te":"익숙해지고 (~해서)","masu":"익숙해집니다","masen":"익숙해지지 않습니다","mashita":"익숙해졌습니다","masendeshita":"익숙해지지 않았습니다","ta":"익숙해졌다","nakatta":"익숙해지지 않았다"}},{"group":2,"cat":"え단+る","kanji":"負ける","kana":"まける","meaning":"지다 (패배)","ko":"마케루","forms":{"te":{"jp":"負けて","kana":"まけて","ko":"마케테"},"masu":{"jp":"負けます","kana":"まけます","ko":"마케마스"},"masen":{"jp":"負けません","kana":"まけません","ko":"마케마센"},"mashita":{"jp":"負けました","kana":"まけました","ko":"마케마시타"},"masendeshita":{"jp":"負けませんでした","kana":"まけませんでした","ko":"마케마센데시타"},"ta":{"jp":"負けた","kana":"まけた","ko":"마케타"},"nakatta":{"jp":"負けなかった","kana":"まけなかった","ko":"마케나캇타"}},"koForms":{"base":"지다","te":"지고 (~해서)","masu":"집니다","masen":"지지 않습니다","mashita":"졌습니다","masendeshita":"지지 않았습니다","ta":"졌다","nakatta":"지지 않았다"}},{"group":2,"cat":"え단+る","kanji":"投げる","kana":"なげる","meaning":"던지다","ko":"나게루","forms":{"te":{"jp":"投げて","kana":"なげて","ko":"나게테"},"masu":{"jp":"投げます","kana":"なげます","ko":"나게마스"},"masen":{"jp":"投げません","kana":"なげません","ko":"나게마센"},"mashita":{"jp":"投げました","kana":"なげました","ko":"나게마시타"},"masendeshita":{"jp":"投げませんでした","kana":"なげませんでした","ko":"나게마센데시타"},"ta":{"jp":"投げた","kana":"なげた","ko":"나게타"},"nakatta":{"jp":"投げなかった","kana":"なげなかった","ko":"나게나캇타"}},"koForms":{"base":"던지다","te":"던지고 (~해서)","masu":"던집니다","masen":"던지지 않습니다","mashita":"던졌습니다","masendeshita":"던지지 않았습니다","ta":"던졌다","nakatta":"던지지 않았다"}},{"group":2,"cat":"え단+る","kanji":"逃げる","kana":"にげる","meaning":"도망가다","ko":"니게루","forms":{"te":{"jp":"逃げて","kana":"にげて","ko":"니게테"},"masu":{"jp":"逃げます","kana":"にげます","ko":"니게마스"},"masen":{"jp":"逃げません","kana":"にげません","ko":"니게마센"},"mashita":{"jp":"逃げました","kana":"にげました","ko":"니게마시타"},"masendeshita":{"jp":"逃げませんでした","kana":"にげませんでした","ko":"니게마센데시타"},"ta":{"jp":"逃げた","kana":"にげた","ko":"니게타"},"nakatta":{"jp":"逃げなかった","kana":"にげなかった","ko":"니게나캇타"}},"koForms":{"base":"도망가다","te":"도망가고 (~해서)","masu":"도망갑니다","masen":"도망가지 않습니다","mashita":"도망갔습니다","masendeshita":"도망가지 않았습니다","ta":"도망갔다","nakatta":"도망가지 않았다"}},{"group":2,"cat":"え단+る","kanji":"捨てる","kana":"すてる","meaning":"버리다","ko":"스테루","forms":{"te":{"jp":"捨てて","kana":"すてて","ko":"스테테"},"masu":{"jp":"捨てます","kana":"すてます","ko":"스테마스"},"masen":{"jp":"捨てません","kana":"すてません","ko":"스테마센"},"mashita":{"jp":"捨てました","kana":"すてました","ko":"스테마시타"},"masendeshita":{"jp":"捨てませんでした","kana":"すてませんでした","ko":"스테마센데시타"},"ta":{"jp":"捨てた","kana":"すてた","ko":"스테타"},"nakatta":{"jp":"捨てなかった","kana":"すてなかった","ko":"스테나캇타"}},"koForms":{"base":"버리다","te":"버리고 (~해서)","masu":"버립니다","masen":"버리지 않습니다","mashita":"버렸습니다","masendeshita":"버리지 않았습니다","ta":"버렸다","nakatta":"버리지 않았다"}},{"group":2,"cat":"え단+る","kanji":"育てる","kana":"そだてる","meaning":"키우다","ko":"소다테루","forms":{"te":{"jp":"育てて","kana":"そだてて","ko":"소다테테"},"masu":{"jp":"育てます","kana":"そだてます","ko":"소다테마스"},"masen":{"jp":"育てません","kana":"そだてません","ko":"소다테마센"},"mashita":{"jp":"育てました","kana":"そだてました","ko":"소다테마시타"},"masendeshita":{"jp":"育てませんでした","kana":"そだてませんでした","ko":"소다테마센데시타"},"ta":{"jp":"育てた","kana":"そだてた","ko":"소다테타"},"nakatta":{"jp":"育てなかった","kana":"そだてなかった","ko":"소다테나캇타"}},"koForms":{"base":"키우다","te":"키우고 (~해서)","masu":"키웁니다","masen":"키우지 않습니다","mashita":"키웠습니다","masendeshita":"키우지 않았습니다","ta":"키웠다","nakatta":"키우지 않았다"}},{"group":2,"cat":"え단+る","kanji":"助ける","kana":"たすける","meaning":"돕다, 구하다","ko":"타스케루","forms":{"te":{"jp":"助けて","kana":"たすけて","ko":"타스케테"},"masu":{"jp":"助けます","kana":"たすけます","ko":"타스케마스"},"masen":{"jp":"助けません","kana":"たすけません","ko":"타스케마센"},"mashita":{"jp":"助けました","kana":"たすけました","ko":"타스케마시타"},"masendeshita":{"jp":"助けませんでした","kana":"たすけませんでした","ko":"타스케마센데시타"},"ta":{"jp":"助けた","kana":"たすけた","ko":"타스케타"},"nakatta":{"jp":"助けなかった","kana":"たすけなかった","ko":"타스케나캇타"}},"koForms":{"base":"돕다","te":"돕고 (~해서)","masu":"돕습니다","masen":"돕지 않습니다","mashita":"도왔습니다","masendeshita":"돕지 않았습니다","ta":"도왔다","nakatta":"돕지 않았다"}},{"group":2,"cat":"え단+る","kanji":"受ける","kana":"うける","meaning":"받다, 치르다","ko":"우케루","forms":{"te":{"jp":"受けて","kana":"うけて","ko":"우케테"},"masu":{"jp":"受けます","kana":"うけます","ko":"우케마스"},"masen":{"jp":"受けません","kana":"うけません","ko":"우케마센"},"mashita":{"jp":"受けました","kana":"うけました","ko":"우케마시타"},"masendeshita":{"jp":"受けませんでした","kana":"うけませんでした","ko":"우케마센데시타"},"ta":{"jp":"受けた","kana":"うけた","ko":"우케타"},"nakatta":{"jp":"受けなかった","kana":"うけなかった","ko":"우케나캇타"}},"koForms":{"base":"받다","te":"받고 (~해서)","masu":"받습니다","masen":"받지 않습니다","mashita":"받았습니다","masendeshita":"받지 않았습니다","ta":"받았다","nakatta":"받지 않았다"}},{"group":2,"cat":"え단+る","kanji":"変える","kana":"かえる","meaning":"바꾸다","ko":"카에루","forms":{"te":{"jp":"変えて","kana":"かえて","ko":"카에테"},"masu":{"jp":"変えます","kana":"かえます","ko":"카에마스"},"masen":{"jp":"変えません","kana":"かえません","ko":"카에마센"},"mashita":{"jp":"変えました","kana":"かえました","ko":"카에마시타"},"masendeshita":{"jp":"変えませんでした","kana":"かえませんでした","ko":"카에마센데시타"},"ta":{"jp":"変えた","kana":"かえた","ko":"카에타"},"nakatta":{"jp":"変えなかった","kana":"かえなかった","ko":"카에나캇타"}},"koForms":{"base":"바꾸다","te":"바꾸고 (~해서)","masu":"바꿉니다","masen":"바꾸지 않습니다","mashita":"바꿨습니다","masendeshita":"바꾸지 않았습니다","ta":"바꿨다","nakatta":"바꾸지 않았다"}},{"group":2,"cat":"え단+る","kanji":"着替える","kana":"きがえる","meaning":"갈아입다","ko":"키가에루","forms":{"te":{"jp":"着替えて","kana":"きがえて","ko":"키가에테"},"masu":{"jp":"着替えます","kana":"きがえます","ko":"키가에마스"},"masen":{"jp":"着替えません","kana":"きがえません","ko":"키가에마센"},"mashita":{"jp":"着替えました","kana":"きがえました","ko":"키가에마시타"},"masendeshita":{"jp":"着替えませんでした","kana":"きがえませんでした","ko":"키가에마센데시타"},"ta":{"jp":"着替えた","kana":"きがえた","ko":"키가에타"},"nakatta":{"jp":"着替えなかった","kana":"きがえなかった","ko":"키가에나캇타"}},"koForms":{"base":"갈아입다","te":"갈아입고 (~해서)","masu":"갈아입습니다","masen":"갈아입지 않습니다","mashita":"갈아입었습니다","masendeshita":"갈아입지 않았습니다","ta":"갈아입었다","nakatta":"갈아입지 않았다"}},{"group":3,"cat":"불규칙","kanji":"する","kana":"する","meaning":"하다","ko":"스루","forms":{"te":{"jp":"して","kana":"して","ko":"시테"},"masu":{"jp":"します","kana":"します","ko":"시마스"},"masen":{"jp":"しません","kana":"しません","ko":"시마센"},"mashita":{"jp":"しました","kana":"しました","ko":"시마시타"},"masendeshita":{"jp":"しませんでした","kana":"しませんでした","ko":"시마센데시타"},"ta":{"jp":"した","kana":"した","ko":"시타"},"nakatta":{"jp":"しなかった","kana":"しなかった","ko":"시나캇타"}},"koForms":{"base":"하다","te":"하고 (~해서)","masu":"합니다","masen":"하지 않습니다","mashita":"했습니다","masendeshita":"하지 않았습니다","ta":"했다","nakatta":"하지 않았다"}},{"group":3,"cat":"불규칙","kanji":"来る","kana":"くる","meaning":"오다","ko":"쿠루","forms":{"te":{"jp":"来て","kana":"きて","ko":"키테"},"masu":{"jp":"来ます","kana":"きます","ko":"키마스"},"masen":{"jp":"来ません","kana":"きません","ko":"키마센"},"mashita":{"jp":"来ました","kana":"きました","ko":"키마시타"},"masendeshita":{"jp":"来ませんでした","kana":"きませんでした","ko":"키마센데시타"},"ta":{"jp":"来た","kana":"きた","ko":"키타"},"nakatta":{"jp":"来なかった","kana":"こなかった","ko":"코나캇타"}},"koForms":{"base":"오다","te":"오고 (~해서)","masu":"옵니다","masen":"오지 않습니다","mashita":"왔습니다","masendeshita":"오지 않았습니다","ta":"왔다","nakatta":"오지 않았다"}}],"travel":{"places":[{"day":"1일차 12/4(금)","jp":"関西国際空港","kana":"かんさい こくさい くうこう","ko":"칸사이 코쿠사이 쿠-코-","name":"간사이 국제공항","memo":"도착·출국 공항"},{"day":"1일차 12/4(금)","jp":"第1ターミナル","kana":"だいいち たーみなる","ko":"다이이치 타-미나루","name":"제1터미널","memo":""},{"day":"1일차 12/4(금)","jp":"特急はるか","kana":"とっきゅう はるか","ko":"톳큐- 하루카","name":"특급 하루카","memo":"공항 → 교토역 열차"},{"day":"1일차 12/4(금)","jp":"京都駅","kana":"きょうと えき","ko":"쿄-토 에키","name":"교토역","memo":""},{"day":"1일차 12/4(금)","jp":"ザ・サウザンド京都","kana":"ざ さうざんど きょうと","ko":"자 사우잔도 쿄-토","name":"더 사우전드 교토","memo":"숙소"},{"day":"1일차 12/4(금)","jp":"モリタ屋 JR京都伊勢丹店","kana":"もりたや じぇいあーる きょうと いせたん てん","ko":"모리타야 제이아-루 쿄-토 이세탄 텐","name":"모리타야 JR교토 이세탄점","memo":"점심 · 스키야키"},{"day":"1일차 12/4(금)","jp":"清水寺","kana":"きよみずでら","ko":"키요미즈데라","name":"기요미즈데라","memo":""},{"day":"1일차 12/4(금)","jp":"産寧坂","kana":"さんねいざか","ko":"산네이자카","name":"산넨자카","memo":""},{"day":"1일차 12/4(금)","jp":"江戸川 近鉄みやこみち店","kana":"えどがわ きんてつ みやこみち てん","ko":"에도가와 킨테츠 미야코미치 텐","name":"에도가와 킨테츠 미야코미치점","memo":"저녁 후보"},{"day":"1일차 12/4(금)","jp":"豆乳とんしゃぶ 寅太郎","kana":"とうにゅう とんしゃぶ とらたろう","ko":"토-뉴- 톤샤부 토라타로-","name":"두유 돈샤브 토라타로","memo":"저녁 후보"},{"day":"1일차 12/4(금)","jp":"牛カツ京都勝牛 京都駅前店","kana":"ぎゅうかつ きょうと かつぎゅう きょうと えきまえ てん","ko":"규-카츠 쿄-토 카츠규- 쿄-토 에키마에 텐","name":"규카츠 교토가츠규 교토역전점","memo":"저녁 후보"},{"day":"1일차 12/4(금)","jp":"東寺","kana":"とうじ","ko":"토-지","name":"도지","memo":"야간 라이트업"},{"day":"2일차 12/5(토)","jp":"馬堀駅","kana":"うまほり えき","ko":"우마호리 에키","name":"우마호리역","memo":""},{"day":"2일차 12/5(토)","jp":"トロッコ亀岡駅","kana":"とろっこ かめおか えき","ko":"토롯코 카메오카 에키","name":"토롯코 가메오카역","memo":"토롯코 열차 출발"},{"day":"2일차 12/5(토)","jp":"トロッコ嵐山駅","kana":"とろっこ あらしやま えき","ko":"토롯코 아라시야마 에키","name":"토롯코 아라시야마역","memo":""},{"day":"2일차 12/5(토)","jp":"常寂光寺","kana":"じょうじゃっこうじ","ko":"조-잣코-지","name":"조잣코지","memo":""},{"day":"2일차 12/5(토)","jp":"竹林の小径","kana":"ちくりん の こみち","ko":"치쿠린 노 코미치","name":"치쿠린 (대나무숲길)","memo":""},{"day":"2일차 12/5(토)","jp":"天龍寺","kana":"てんりゅうじ","ko":"텐류-지","name":"텐류지","memo":""},{"day":"2일차 12/5(토)","jp":"渡月橋","kana":"とげつきょう","ko":"토게츠쿄-","name":"도게츠교","memo":""},{"day":"2일차 12/5(토)","jp":"龍安寺","kana":"りょうあんじ","ko":"료-안지","name":"료안지","memo":""},{"day":"2일차 12/5(토)","jp":"寿しのむさし 京都駅店","kana":"すしの むさし きょうと えき てん","ko":"스시노 무사시 쿄-토 에키 텐","name":"스시노무사시 교토역점","memo":"저녁 · 스시"},{"day":"2일차 12/5(토)","jp":"二条城","kana":"にじょうじょう","ko":"니조-조-","name":"니조성","memo":"야간 라이트업"},{"day":"3일차 12/6(일)","jp":"三十三間堂","kana":"さんじゅうさんげんどう","ko":"산주-산겐도-","name":"산주산겐도","memo":""},{"day":"3일차 12/6(일)","jp":"永観堂","kana":"えいかんどう","ko":"에이칸도-","name":"에이칸도","memo":"단풍"},{"day":"3일차 12/6(일)","jp":"南禅寺","kana":"なんぜんじ","ko":"난젠지","name":"난젠지","memo":""},{"day":"3일차 12/6(일)","jp":"水路閣","kana":"すいろかく","ko":"스이로카쿠","name":"수로각","memo":"난젠지 안"},{"day":"3일차 12/6(일)","jp":"湯豆腐","kana":"ゆどうふ","ko":"유도-후","name":"유두부","memo":"점심 메뉴"},{"day":"3일차 12/6(일)","jp":"大丸京都店","kana":"だいまる きょうと てん","ko":"다이마루 쿄-토 텐","name":"다이마루 교토점","memo":"백화점"},{"day":"3일차 12/6(일)","jp":"三嶋亭","kana":"みしまてい","ko":"미시마테이","name":"미시마테이","memo":"저녁 · 스키야키 코스"},{"day":"3일차 12/6(일)","jp":"四条駅","kana":"しじょう えき","ko":"시조- 에키","name":"시조역","memo":""},{"day":"4일차 12/7(월)","jp":"大阪駅","kana":"おおさか えき","ko":"오-사카 에키","name":"오사카역","memo":""},{"day":"4일차 12/7(월)","jp":"なんば駅","kana":"なんば えき","ko":"난바 에키","name":"난바역","memo":""},{"day":"4일차 12/7(월)","jp":"ホテルロイヤルクラシック大阪","kana":"ほてる ろいやる くらしっく おおさか","ko":"호테루 로이야루 쿠라싯쿠 오-사카","name":"호텔 로열 클래식 오사카","memo":"숙소"},{"day":"4일차 12/7(월)","jp":"松阪牛焼肉M","kana":"まつさかうし やきにく えむ","ko":"마츠사카우시 야키니쿠 에무","name":"마츠사카규 야키니쿠 M","memo":"점심"},{"day":"4일차 12/7(월)","jp":"カルディコーヒーファーム なんばマルイ店","kana":"かるでぃ こーひー ふぁーむ なんば まるい てん","ko":"카루디 코-히- 파-무 난바 마루이 텐","name":"칼디 커피 팜 난바마루이점","memo":"쇼핑"},{"day":"4일차 12/7(월)","jp":"ドン・キホーテ なんば千日前店","kana":"どん きほーて なんば せんにちまえ てん","ko":"돈 키호-테 난바 센니치마에 텐","name":"돈키호테 난바 센니치마에점","memo":"쇼핑"},{"day":"4일차 12/7(월)","jp":"道頓堀","kana":"どうとんぼり","ko":"도-톤보리","name":"도톤보리","memo":""},{"day":"4일차 12/7(월)","jp":"グリコサイン","kana":"ぐりこ さいん","ko":"구리코 사인","name":"글리코 간판","memo":""},{"day":"4일차 12/7(월)","jp":"美津の","kana":"みづの","ko":"미즈노","name":"미즈노","memo":"저녁 · 오코노미야키"},{"day":"4일차 12/7(월)","jp":"あべのハルカス","kana":"あべの はるかす","ko":"아베노 하루카스","name":"아베노 하루카스","memo":"야경 (선택)"},{"day":"5일차 12/8(화)","jp":"南海なんば駅","kana":"なんかい なんば えき","ko":"난카이 난바 에키","name":"난카이 난바역","memo":""},{"day":"5일차 12/8(화)","jp":"りんくうタウン駅","kana":"りんくう たうん えき","ko":"린쿠- 타운 에키","name":"린쿠타운역","memo":""},{"day":"5일차 12/8(화)","jp":"りんくうプレミアム・アウトレット","kana":"りんくう ぷれみあむ あうとれっと","ko":"린쿠- 푸레미아무 아우토렛토","name":"린쿠 프리미엄 아울렛","memo":"쇼핑"},{"day":"5일차 12/8(화)","jp":"こめらく","kana":"こめらく","ko":"코메라쿠","name":"코메라쿠","memo":"늦은 점심 · 오차즈케"}],"phrases":[{"cat":"인사","jp":"こんにちは","kana":"こんにちは","ko":"콘니치와","mean":"안녕하세요 (낮)"},{"cat":"인사","jp":"おはようございます","kana":"おはよう ございます","ko":"오하요- 고자이마스","mean":"안녕하세요 (아침)"},{"cat":"인사","jp":"こんばんは","kana":"こんばんは","ko":"콘반와","mean":"안녕하세요 (저녁)"},{"cat":"인사","jp":"ありがとうございます","kana":"ありがとう ございます","ko":"아리가토- 고자이마스","mean":"감사합니다"},{"cat":"인사","jp":"どうもありがとうございました","kana":"どうも ありがとう ございました","ko":"도-모 아리가토- 고자이마시타","mean":"정말 감사했습니다"},{"cat":"인사","jp":"すみません","kana":"すみません","ko":"스미마센","mean":"저기요 / 죄송합니다"},{"cat":"인사","jp":"ごめんなさい","kana":"ごめんなさい","ko":"고멘나사이","mean":"미안합니다"},{"cat":"인사","jp":"失礼します","kana":"しつれい します","ko":"시츠레이 시마스","mean":"실례합니다"},{"cat":"인사","jp":"大丈夫です","kana":"だいじょうぶ です","ko":"다이조-부 데스","mean":"괜찮습니다"},{"cat":"인사","jp":"お願いします","kana":"おねがい します","ko":"오네가이 시마스","mean":"부탁합니다"},{"cat":"인사","jp":"はじめまして","kana":"はじめまして","ko":"하지메마시테","mean":"처음 뵙겠습니다"},{"cat":"인사","jp":"韓国から来ました","kana":"かんこく から きました","ko":"칸코쿠 카라 키마시타","mean":"한국에서 왔습니다"},{"cat":"인사","jp":"よろしくお願いします","kana":"よろしく おねがい します","ko":"요로시쿠 오네가이 시마스","mean":"잘 부탁드립니다"},{"cat":"인사","jp":"さようなら","kana":"さようなら","ko":"사요-나라","mean":"안녕히 계세요"},{"cat":"인사","jp":"おやすみなさい","kana":"おやすみなさい","ko":"오야스미나사이","mean":"안녕히 주무세요"},{"cat":"인사","jp":"いただきます","kana":"いただきます","ko":"이타다키마스","mean":"잘 먹겠습니다"},{"cat":"인사","jp":"ごちそうさまでした","kana":"ごちそうさま でした","ko":"고치소-사마 데시타","mean":"잘 먹었습니다"},{"cat":"인사","jp":"どういたしまして","kana":"どう いたしまして","ko":"도- 이타시마시테","mean":"천만에요"},{"cat":"인사","jp":"お疲れさまでした","kana":"おつかれさま でした","ko":"오츠카레사마 데시타","mean":"수고하셨습니다"},{"cat":"인사","jp":"またね","kana":"また ね","ko":"마타 네","mean":"또 봐요"},{"cat":"의사소통","jp":"はい","kana":"はい","ko":"하이","mean":"네"},{"cat":"의사소통","jp":"いいえ","kana":"いいえ","ko":"이이에","mean":"아니요"},{"cat":"의사소통","jp":"分かりました","kana":"わかりました","ko":"와카리마시타","mean":"알겠습니다"},{"cat":"의사소통","jp":"分かりません","kana":"わかりません","ko":"와카리마센","mean":"모르겠습니다"},{"cat":"의사소통","jp":"日本語が少し話せます","kana":"にほんご が すこし はなせます","ko":"니혼고 가 스코시 하나세마스","mean":"일본어를 조금 할 수 있어요"},{"cat":"의사소통","jp":"日本語が下手です","kana":"にほんご が へた です","ko":"니혼고 가 헤타 데스","mean":"일본어를 잘 못해요"},{"cat":"의사소통","jp":"もう一度お願いします","kana":"もう いちど おねがい します","ko":"모- 이치도 오네가이 시마스","mean":"한 번 더 말씀해 주세요"},{"cat":"의사소통","jp":"ゆっくり話してください","kana":"ゆっくり はなして ください","ko":"윳쿠리 하나시테 쿠다사이","mean":"천천히 말해 주세요"},{"cat":"의사소통","jp":"英語は話せますか","kana":"えいご は はなせますか","ko":"에이고 와 하나세마스카","mean":"영어 할 수 있나요?"},{"cat":"의사소통","jp":"韓国語は話せますか","kana":"かんこくご は はなせますか","ko":"칸코쿠고 와 하나세마스카","mean":"한국어 할 수 있나요?"},{"cat":"의사소통","jp":"これは何ですか","kana":"これ は なん ですか","ko":"코레 와 난 데스카","mean":"이것은 무엇인가요?"},{"cat":"의사소통","jp":"ここに書いてください","kana":"ここ に かいて ください","ko":"코코 니 카이테 쿠다사이","mean":"여기에 써 주세요"},{"cat":"의사소통","jp":"ちょっと待ってください","kana":"ちょっと まって ください","ko":"촛토 맛테 쿠다사이","mean":"잠깐 기다려 주세요"},{"cat":"의사소통","jp":"いいですか","kana":"いい ですか","ko":"이이 데스카","mean":"괜찮을까요?"},{"cat":"의사소통","jp":"結構です","kana":"けっこう です","ko":"켓코- 데스","mean":"괜찮습니다 (사양할 때)"},{"cat":"의사소통","jp":"写真を撮ってもいいですか","kana":"しゃしん を とっても いい ですか","ko":"샤신 오 톳테모 이이 데스카","mean":"사진 찍어도 되나요?"},{"cat":"의사소통","jp":"写真を撮ってもらえますか","kana":"しゃしん を とって もらえますか","ko":"샤신 오 톳테 모라에마스카","mean":"사진 좀 찍어 주실 수 있나요?"},{"cat":"의사소통","jp":"ここを押してください","kana":"ここ を おして ください","ko":"코코 오 오시테 쿠다사이","mean":"여기를 눌러 주세요"},{"cat":"의사소통","jp":"本当ですか","kana":"ほんとう ですか","ko":"혼토- 데스카","mean":"정말요?"},{"cat":"의사소통","jp":"そうです","kana":"そう です","ko":"소- 데스","mean":"그렇습니다"},{"cat":"공항","jp":"観光です","kana":"かんこう です","ko":"칸코- 데스","mean":"관광입니다 (입국 목적)"},{"cat":"공항","jp":"五日間滞在します","kana":"いつかかん たいざい します","ko":"이츠카칸 타이자이 시마스","mean":"5일 동안 머뭅니다"},{"cat":"공항","jp":"ホテルに泊まります","kana":"ほてる に とまります","ko":"호테루 니 토마리마스","mean":"호텔에 묵습니다"},{"cat":"공항","jp":"チェックインカウンターはどこですか","kana":"ちぇっくいん かうんたー は どこ ですか","ko":"쳇쿠인 카운타- 와 도코 데스카","mean":"체크인 카운터는 어디예요?"},{"cat":"공항","jp":"荷物を預けたいです","kana":"にもつ を あずけたい です","ko":"니모츠 오 아즈케타이 데스","mean":"짐을 부치고 싶어요"},{"cat":"공항","jp":"窓側の席をお願いします","kana":"まどがわ の せき を おねがい します","ko":"마도가와 노 세키 오 오네가이 시마스","mean":"창가 자리로 부탁합니다"},{"cat":"공항","jp":"通路側の席をお願いします","kana":"つうろがわ の せき を おねがい します","ko":"츠우로가와 노 세키 오 오네가이 시마스","mean":"통로 쪽 자리로 부탁합니다"},{"cat":"공항","jp":"荷物が出てきません","kana":"にもつ が でて きません","ko":"니모츠 가 데테 키마센","mean":"짐이 안 나와요"},{"cat":"공항","jp":"何番ゲートですか","kana":"なんばん げーと ですか","ko":"난반 게-토 데스카","mean":"몇 번 게이트인가요?"},{"cat":"공항","jp":"両替所はどこですか","kana":"りょうがえじょ は どこ ですか","ko":"료-가에조 와 도코 데스카","mean":"환전소는 어디예요?"},{"cat":"공항","jp":"ATMはどこですか","kana":"えーてぃーえむ は どこ ですか","ko":"에-티-에무 와 도코 데스카","mean":"ATM은 어디예요?"},{"cat":"공항","jp":"Wi-Fiはありますか","kana":"わいふぁい は ありますか","ko":"와이파이 와 아리마스카","mean":"와이파이 있나요?"},{"cat":"공항","jp":"パスワードは何ですか","kana":"ぱすわーど は なん ですか","ko":"파스와-도 와 난 데스카","mean":"비밀번호가 뭐예요?"},{"cat":"공항","jp":"搭乗口はどこですか","kana":"とうじょうぐち は どこ ですか","ko":"토-조-구치 와 도코 데스카","mean":"탑승구는 어디예요?"},{"cat":"공항","jp":"免税店はどこですか","kana":"めんぜいてん は どこ ですか","ko":"멘제이텐 와 도코 데스카","mean":"면세점은 어디예요?"},{"cat":"전철·버스","jp":"駅はどこですか","kana":"えき は どこ ですか","ko":"에키 와 도코 데스카","mean":"역은 어디예요?"},{"cat":"전철·버스","jp":"切符売り場はどこですか","kana":"きっぷうりば は どこ ですか","ko":"킷푸-리바 와 도코 데스카","mean":"표 파는 곳은 어디예요?"},{"cat":"전철·버스","jp":"京都駅までいくらですか","kana":"きょうとえき まで いくら ですか","ko":"쿄-토에키 마데 이쿠라 데스카","mean":"교토역까지 얼마예요?"},{"cat":"전철·버스","jp":"大人二枚お願いします","kana":"おとな にまい おねがい します","ko":"오토나 니마이 오네가이 시마스","mean":"어른 두 장 주세요"},{"cat":"전철·버스","jp":"この電車は京都に行きますか","kana":"この でんしゃ は きょうと に いきますか","ko":"코노 덴샤 와 쿄-토 니 이키마스카","mean":"이 전철 교토 가나요?"},{"cat":"전철·버스","jp":"何番線ですか","kana":"なんばんせん ですか","ko":"난반센 데스카","mean":"몇 번 승강장이에요?"},{"cat":"전철·버스","jp":"次の駅は何ですか","kana":"つぎ の えき は なん ですか","ko":"츠기 노 에키 와 난 데스카","mean":"다음 역은 어디예요?"},{"cat":"전철·버스","jp":"どこで乗り換えますか","kana":"どこ で のりかえますか","ko":"도코 데 노리카에마스카","mean":"어디서 갈아타나요?"},{"cat":"전철·버스","jp":"乗り換えはありますか","kana":"のりかえ は ありますか","ko":"노리카에 와 아리마스카","mean":"환승이 있나요?"},{"cat":"전철·버스","jp":"この席は空いていますか","kana":"この せき は あいて いますか","ko":"코노 세키 와 아이테 이마스카","mean":"이 자리 비었나요?"},{"cat":"전철·버스","jp":"終電は何時ですか","kana":"しゅうでん は なんじ ですか","ko":"슈-덴 와 난지 데스카","mean":"막차는 몇 시예요?"},{"cat":"전철·버스","jp":"ICカードをチャージしたいです","kana":"あいしー かーど を ちゃーじ したい です","ko":"아이시- 카-도 오 차-지 시타이 데스","mean":"교통카드 충전하고 싶어요"},{"cat":"전철·버스","jp":"指定席","kana":"していせき","ko":"시테이세키","mean":"지정석"},{"cat":"전철·버스","jp":"自由席","kana":"じゆうせき","ko":"지유-세키","mean":"자유석"},{"cat":"전철·버스","jp":"改札口はどこですか","kana":"かいさつぐち は どこ ですか","ko":"카이사츠구치 와 도코 데스카","mean":"개찰구는 어디예요?"},{"cat":"전철·버스","jp":"出口はどこですか","kana":"でぐち は どこ ですか","ko":"데구치 와 도코 데스카","mean":"출구는 어디예요?"},{"cat":"전철·버스","jp":"入口","kana":"いりぐち","ko":"이리구치","mean":"입구"},{"cat":"전철·버스","jp":"バス停はどこですか","kana":"ばすてい は どこ ですか","ko":"바스테이 와 도코 데스카","mean":"버스 정류장은 어디예요?"},{"cat":"전철·버스","jp":"このバスは清水寺に行きますか","kana":"この ばす は きよみずでら に いきますか","ko":"코노 바스 와 키요미즈데라 니 이키마스카","mean":"이 버스 기요미즈데라 가나요?"},{"cat":"전철·버스","jp":"降ります","kana":"おります","ko":"오리마스","mean":"내립니다"},{"cat":"전철·버스","jp":"一日乗車券はありますか","kana":"いちにち じょうしゃけん は ありますか","ko":"이치니치 조-샤켄 와 아리마스카","mean":"1일 승차권 있나요?"},{"cat":"전철·버스","jp":"コインロッカーはどこですか","kana":"こいんろっかー は どこ ですか","ko":"코인롯카- 와 도코 데스카","mean":"코인로커는 어디예요?"},{"cat":"전철·버스","jp":"乗り過ごしました","kana":"のりすごしました","ko":"노리스고시마시타","mean":"내릴 역을 지나쳤어요"},{"cat":"전철·버스","jp":"切符をなくしました","kana":"きっぷ を なくしました","ko":"킷푸 오 나쿠시마시타","mean":"표를 잃어버렸어요"},{"cat":"전철·버스","jp":"時刻表","kana":"じこくひょう","ko":"지코쿠효-","mean":"시간표"},{"cat":"택시","jp":"タクシー乗り場はどこですか","kana":"たくしー のりば は どこ ですか","ko":"타쿠시- 노리바 와 도코 데스카","mean":"택시 승강장은 어디예요?"},{"cat":"택시","jp":"ここまでお願いします","kana":"ここ まで おねがい します","ko":"코코 마데 오네가이 시마스","mean":"여기까지 부탁합니다 (지도 보여주며)"},{"cat":"택시","jp":"この住所までお願いします","kana":"この じゅうしょ まで おねがい します","ko":"코노 주-쇼 마데 오네가이 시마스","mean":"이 주소로 가 주세요"},{"cat":"택시","jp":"どのくらいかかりますか","kana":"どのくらい かかりますか","ko":"도노쿠라이 카카리마스카","mean":"얼마나 걸려요?"},{"cat":"택시","jp":"いくらぐらいですか","kana":"いくら ぐらい ですか","ko":"이쿠라 구라이 데스카","mean":"대략 얼마예요?"},{"cat":"택시","jp":"ここで止めてください","kana":"ここ で とめて ください","ko":"코코 데 토메테 쿠다사이","mean":"여기서 세워 주세요"},{"cat":"택시","jp":"急いでください","kana":"いそいで ください","ko":"이소이데 쿠다사이","mean":"서둘러 주세요"},{"cat":"택시","jp":"トランクを開けてください","kana":"とらんく を あけて ください","ko":"토란쿠 오 아케테 쿠다사이","mean":"트렁크 열어 주세요"},{"cat":"택시","jp":"カードで払えますか","kana":"かーど で はらえますか","ko":"카-도 데 하라에마스카","mean":"카드로 낼 수 있나요?"},{"cat":"택시","jp":"領収書をください","kana":"りょうしゅうしょ を ください","ko":"료-슈-쇼 오 쿠다사이","mean":"영수증 주세요"},{"cat":"택시","jp":"まっすぐ行ってください","kana":"まっすぐ いって ください","ko":"맛스구 잇테 쿠다사이","mean":"직진해 주세요"},{"cat":"택시","jp":"右に曲がってください","kana":"みぎ に まがって ください","ko":"미기 니 마갓테 쿠다사이","mean":"오른쪽으로 돌아 주세요"},{"cat":"호텔","jp":"チェックインお願いします","kana":"ちぇっくいん おねがい します","ko":"쳇쿠인 오네가이 시마스","mean":"체크인 부탁합니다"},{"cat":"호텔","jp":"予約しています","kana":"よやく して います","ko":"요야쿠 시테 이마스","mean":"예약했습니다"},{"cat":"호텔","jp":"予約名はキムです","kana":"よやくめい は きむ です","ko":"요야쿠메이 와 키무 데스","mean":"예약자 이름은 김입니다"},{"cat":"호텔","jp":"チェックアウトは何時ですか","kana":"ちぇっくあうと は なんじ ですか","ko":"쳇쿠아우토 와 난지 데스카","mean":"체크아웃은 몇 시예요?"},{"cat":"호텔","jp":"荷物を預かってもらえますか","kana":"にもつ を あずかって もらえますか","ko":"니모츠 오 아즈캇테 모라에마스카","mean":"짐 맡아 주실 수 있나요?"},{"cat":"호텔","jp":"荷物を取りに来ました","kana":"にもつ を とり に きました","ko":"니모츠 오 토리 니 키마시타","mean":"짐 찾으러 왔어요"},{"cat":"호텔","jp":"朝食は何時からですか","kana":"ちょうしょく は なんじ から ですか","ko":"초-쇼쿠 와 난지 카라 데스카","mean":"조식은 몇 시부터예요?"},{"cat":"호텔","jp":"朝食はどこですか","kana":"ちょうしょく は どこ ですか","ko":"초-쇼쿠 와 도코 데스카","mean":"조식은 어디서 먹나요?"},{"cat":"호텔","jp":"部屋の鍵をなくしました","kana":"へや の かぎ を なくしました","ko":"헤야 노 카기 오 나쿠시마시타","mean":"방 열쇠를 잃어버렸어요"},{"cat":"호텔","jp":"タオルをもう一枚ください","kana":"たおる を もう いちまい ください","ko":"타오루 오 모- 이치마이 쿠다사이","mean":"수건 한 장 더 주세요"},{"cat":"호텔","jp":"お湯が出ません","kana":"おゆ が でません","ko":"오유 가 데마센","mean":"뜨거운 물이 안 나와요"},{"cat":"호텔","jp":"エアコンがつきません","kana":"えあこん が つきません","ko":"에아콘 가 츠키마센","mean":"에어컨이 안 켜져요"},{"cat":"호텔","jp":"部屋を掃除してください","kana":"へや を そうじ して ください","ko":"헤야 오 소-지 시테 쿠다사이","mean":"방 청소 부탁해요"},{"cat":"호텔","jp":"チェックアウトお願いします","kana":"ちぇっくあうと おねがい します","ko":"쳇쿠아우토 오네가이 시마스","mean":"체크아웃 부탁합니다"},{"cat":"호텔","jp":"タクシーを呼んでもらえますか","kana":"たくしー を よんで もらえますか","ko":"타쿠시- 오 욘데 모라에마스카","mean":"택시 불러 주실 수 있나요?"},{"cat":"호텔","jp":"近くにコンビニはありますか","kana":"ちかく に こんびに は ありますか","ko":"치카쿠 니 콘비니 와 아리마스카","mean":"근처에 편의점 있나요?"},{"cat":"호텔","jp":"変換プラグはありますか","kana":"へんかん ぷらぐ は ありますか","ko":"헨칸 푸라구 와 아리마스카","mean":"변환 플러그 있나요?"},{"cat":"호텔","jp":"部屋は何階ですか","kana":"へや は なんがい ですか","ko":"헤야 와 난가이 데스카","mean":"방은 몇 층이에요?"},{"cat":"호텔","jp":"エレベーターはどこですか","kana":"えれべーたー は どこ ですか","ko":"에레베-타- 와 도코 데스카","mean":"엘리베이터는 어디예요?"},{"cat":"호텔","jp":"もう一泊できますか","kana":"もう いっぱく できますか","ko":"모- 잇파쿠 데키마스카","mean":"하루 더 묵을 수 있나요?"},{"cat":"식당","jp":"二人です","kana":"ふたり です","ko":"후타리 데스","mean":"두 명입니다"},{"cat":"식당","jp":"予約していません","kana":"よやく して いません","ko":"요야쿠 시테 이마센","mean":"예약 안 했어요"},{"cat":"식당","jp":"どのくらい待ちますか","kana":"どのくらい まちますか","ko":"도노쿠라이 마치마스카","mean":"얼마나 기다려요?"},{"cat":"식당","jp":"メニューをください","kana":"めにゅー を ください","ko":"메뉴- 오 쿠다사이","mean":"메뉴판 주세요"},{"cat":"식당","jp":"韓国語のメニューはありますか","kana":"かんこくご の めにゅー は ありますか","ko":"칸코쿠고 노 메뉴- 와 아리마스카","mean":"한국어 메뉴 있나요?"},{"cat":"식당","jp":"おすすめは何ですか","kana":"おすすめ は なん ですか","ko":"오스스메 와 난 데스카","mean":"추천 메뉴는 뭐예요?"},{"cat":"식당","jp":"これをください","kana":"これ を ください","ko":"코레 오 쿠다사이","mean":"이거 주세요"},{"cat":"식당","jp":"これを二つください","kana":"これ を ふたつ ください","ko":"코레 오 후타츠 쿠다사이","mean":"이거 두 개 주세요"},{"cat":"식당","jp":"同じものをください","kana":"おなじ もの を ください","ko":"오나지 모노 오 쿠다사이","mean":"같은 걸로 주세요"},{"cat":"식당","jp":"注文お願いします","kana":"ちゅうもん おねがい します","ko":"추-몬 오네가이 시마스","mean":"주문할게요"},{"cat":"식당","jp":"水をください","kana":"みず を ください","ko":"미즈 오 쿠다사이","mean":"물 주세요"},{"cat":"식당","jp":"お箸をください","kana":"おはし を ください","ko":"오하시 오 쿠다사이","mean":"젓가락 주세요"},{"cat":"식당","jp":"取り皿をください","kana":"とりざら を ください","ko":"토리자라 오 쿠다사이","mean":"앞접시 주세요"},{"cat":"식당","jp":"辛いですか","kana":"からい ですか","ko":"카라이 데스카","mean":"매운가요?"},{"cat":"식당","jp":"生ビールをください","kana":"なまびーる を ください","ko":"나마비-루 오 쿠다사이","mean":"생맥주 주세요"},{"cat":"식당","jp":"お茶をください","kana":"おちゃ を ください","ko":"오차 오 쿠다사이","mean":"차 주세요"},{"cat":"식당","jp":"これは何が入っていますか","kana":"これ は なに が はいって いますか","ko":"코레 와 나니 가 하잇테 이마스카","mean":"이건 뭐가 들어 있어요?"},{"cat":"식당","jp":"アレルギーがあります","kana":"あれるぎー が あります","ko":"아레루기- 가 아리마스","mean":"알레르기가 있어요"},{"cat":"식당","jp":"えびが食べられません","kana":"えび が たべられません","ko":"에비 가 타베라레마센","mean":"새우를 못 먹어요"},{"cat":"식당","jp":"大盛りにしてください","kana":"おおもり に して ください","ko":"오-모리 니 시테 쿠다사이","mean":"곱빼기로 해 주세요"},{"cat":"식당","jp":"とてもおいしいです","kana":"とても おいしい です","ko":"토테모 오이시이 데스","mean":"아주 맛있어요"},{"cat":"식당","jp":"お会計お願いします","kana":"おかいけい おねがい します","ko":"오카이케이 오네가이 시마스","mean":"계산 부탁합니다"},{"cat":"식당","jp":"別々に払えますか","kana":"べつべつ に はらえますか","ko":"베츠베츠 니 하라에마스카","mean":"따로 계산할 수 있나요?"},{"cat":"식당","jp":"カードは使えますか","kana":"かーど は つかえますか","ko":"카-도 와 츠카에마스카","mean":"카드 쓸 수 있나요?"},{"cat":"식당","jp":"持ち帰りでお願いします","kana":"もちかえり で おねがい します","ko":"모치카에리 데 오네가이 시마스","mean":"포장해 주세요"},{"cat":"식당","jp":"ここで食べます","kana":"ここ で たべます","ko":"코코 데 타베마스","mean":"여기서 먹을게요"},{"cat":"식당","jp":"禁煙席をお願いします","kana":"きんえんせき を おねがい します","ko":"킨엔세키 오 오네가이 시마스","mean":"금연석으로 부탁해요"},{"cat":"식당","jp":"トイレはどこですか","kana":"といれ は どこ ですか","ko":"토이레 와 도코 데스카","mean":"화장실은 어디예요?"},{"cat":"식당","jp":"食券はどこで買いますか","kana":"しょっけん は どこ で かいますか","ko":"숏켄 와 도코 데 카이마스카","mean":"식권은 어디서 사요?"},{"cat":"식당","jp":"ごはんのおかわりはできますか","kana":"ごはん の おかわり は できますか","ko":"고한 노 오카와리 와 데키마스카","mean":"밥 리필 되나요?"},{"cat":"쇼핑","jp":"これはいくらですか","kana":"これ は いくら ですか","ko":"코레 와 이쿠라 데스카","mean":"이거 얼마예요?"},{"cat":"쇼핑","jp":"見ているだけです","kana":"みて いる だけ です","ko":"미테 이루 다케 데스","mean":"그냥 보는 거예요"},{"cat":"쇼핑","jp":"試着してもいいですか","kana":"しちゃく しても いい ですか","ko":"시차쿠 시테모 이이 데스카","mean":"입어 봐도 되나요?"},{"cat":"쇼핑","jp":"もっと大きいサイズはありますか","kana":"もっと おおきい さいず は ありますか","ko":"못토 오-키이 사이즈 와 아리마스카","mean":"더 큰 사이즈 있나요?"},{"cat":"쇼핑","jp":"もっと小さいサイズはありますか","kana":"もっと ちいさい さいず は ありますか","ko":"못토 치이사이 사이즈 와 아리마스카","mean":"더 작은 사이즈 있나요?"},{"cat":"쇼핑","jp":"ほかの色はありますか","kana":"ほか の いろ は ありますか","ko":"호카 노 이로 와 아리마스카","mean":"다른 색 있나요?"},{"cat":"쇼핑","jp":"これにします","kana":"これ に します","ko":"코레 니 시마스","mean":"이걸로 할게요"},{"cat":"쇼핑","jp":"免税できますか","kana":"めんぜい できますか","ko":"멘제이 데키마스카","mean":"면세 되나요?"},{"cat":"쇼핑","jp":"パスポートです","kana":"ぱすぽーと です","ko":"파스포-토 데스","mean":"여권입니다"},{"cat":"쇼핑","jp":"袋はいりません","kana":"ふくろ は いりません","ko":"후쿠로 와 이리마센","mean":"봉투는 필요 없어요"},{"cat":"쇼핑","jp":"袋をください","kana":"ふくろ を ください","ko":"후쿠로 오 쿠다사이","mean":"봉투 주세요"},{"cat":"쇼핑","jp":"プレゼント用に包んでください","kana":"ぷれぜんと よう に つつんで ください","ko":"푸레젠토 요- 니 츠츤데 쿠다사이","mean":"선물용으로 포장해 주세요"},{"cat":"쇼핑","jp":"少し安くなりますか","kana":"すこし やすく なりますか","ko":"스코시 야스쿠 나리마스카","mean":"조금 깎아 주실 수 있나요?"},{"cat":"쇼핑","jp":"在庫はありますか","kana":"ざいこ は ありますか","ko":"자이코 와 아리마스카","mean":"재고 있나요?"},{"cat":"쇼핑","jp":"これはどこにありますか","kana":"これ は どこ に ありますか","ko":"코레 와 도코 니 아리마스카","mean":"이건 어디 있나요? (사진 보여주며)"},{"cat":"쇼핑","jp":"新しいのはありますか","kana":"あたらしい の は ありますか","ko":"아타라시이 노 와 아리마스카","mean":"새 상품 있나요?"},{"cat":"쇼핑","jp":"レシートをください","kana":"れしーと を ください","ko":"레시-토 오 쿠다사이","mean":"영수증 주세요"},{"cat":"쇼핑","jp":"現金で払います","kana":"げんきん で はらいます","ko":"겐킨 데 하라이마스","mean":"현금으로 낼게요"},{"cat":"쇼핑","jp":"カードで払います","kana":"かーど で はらいます","ko":"카-도 데 하라이마스","mean":"카드로 낼게요"},{"cat":"쇼핑","jp":"一括でお願いします","kana":"いっかつ で おねがい します","ko":"잇카츠 데 오네가이 시마스","mean":"일시불로 해 주세요"},{"cat":"쇼핑","jp":"温めてください","kana":"あたためて ください","ko":"아타타메테 쿠다사이","mean":"데워 주세요 (편의점)"},{"cat":"쇼핑","jp":"レジはどこですか","kana":"れじ は どこ ですか","ko":"레지 와 도코 데스카","mean":"계산대는 어디예요?"},{"cat":"쇼핑","jp":"何時まで開いていますか","kana":"なんじ まで あいて いますか","ko":"난지 마데 아이테 이마스카","mean":"몇 시까지 열어요?"},{"cat":"쇼핑","jp":"人気の商品はどれですか","kana":"にんき の しょうひん は どれ ですか","ko":"닌키 노 쇼-힌 와 도레 데스카","mean":"인기 상품은 뭐예요?"},{"cat":"쇼핑","jp":"試食できますか","kana":"ししょく できますか","ko":"시쇼쿠 데키마스카","mean":"시식할 수 있나요?"},{"cat":"관광","jp":"入場料はいくらですか","kana":"にゅうじょうりょう は いくら ですか","ko":"뉴-조-료- 와 이쿠라 데스카","mean":"입장료는 얼마예요?"},{"cat":"관광","jp":"何時に閉まりますか","kana":"なんじ に しまりますか","ko":"난지 니 시마리마스카","mean":"몇 시에 닫아요?"},{"cat":"관광","jp":"ライトアップは何時からですか","kana":"らいとあっぷ は なんじ から ですか","ko":"라이토앗푸 와 난지 카라 데스카","mean":"라이트업은 몇 시부터예요?"},{"cat":"관광","jp":"御朱印をお願いします","kana":"ごしゅいん を おねがい します","ko":"고슈인 오 오네가이 시마스","mean":"고슈인(참배 도장) 부탁합니다"},{"cat":"관광","jp":"パンフレットはありますか","kana":"ぱんふれっと は ありますか","ko":"판후렛토 와 아리마스카","mean":"팸플릿 있나요?"},{"cat":"관광","jp":"ここに入ってもいいですか","kana":"ここ に はいっても いい ですか","ko":"코코 니 하잇테모 이이 데스카","mean":"여기 들어가도 되나요?"},{"cat":"관광","jp":"靴を脱ぎますか","kana":"くつ を ぬぎますか","ko":"쿠츠 오 누기마스카","mean":"신발 벗나요?"},{"cat":"관광","jp":"紅葉がきれいですね","kana":"こうよう が きれい ですね","ko":"코-요- 가 키레이 데스네","mean":"단풍이 예쁘네요"},{"cat":"관광","jp":"すごいですね","kana":"すごい ですね","ko":"스고이 데스네","mean":"대단하네요"},{"cat":"관광","jp":"一番人気の場所はどこですか","kana":"いちばん にんき の ばしょ は どこ ですか","ko":"이치반 닌키 노 바쇼 와 도코 데스카","mean":"가장 인기 있는 곳은 어디예요?"},{"cat":"관광","jp":"荷物を預ける所はありますか","kana":"にもつ を あずける ところ は ありますか","ko":"니모츠 오 아즈케루 토코로 와 아리마스카","mean":"짐 맡길 곳 있나요?"},{"cat":"관광","jp":"列の最後はどこですか","kana":"れつ の さいご は どこ ですか","ko":"레츠 노 사이고 와 도코 데스카","mean":"줄 끝은 어디예요?"},{"cat":"길 묻기","jp":"ここはどこですか","kana":"ここ は どこ ですか","ko":"코코 와 도코 데스카","mean":"여기는 어디예요?"},{"cat":"길 묻기","jp":"道に迷いました","kana":"みち に まよいました","ko":"미치 니 마요이마시타","mean":"길을 잃었어요"},{"cat":"길 묻기","jp":"歩いて行けますか","kana":"あるいて いけますか","ko":"아루이테 이케마스카","mean":"걸어서 갈 수 있나요?"},{"cat":"길 묻기","jp":"ここから遠いですか","kana":"ここ から とおい ですか","ko":"코코 카라 토-이 데스카","mean":"여기서 먼가요?"},{"cat":"길 묻기","jp":"地図で教えてください","kana":"ちず で おしえて ください","ko":"치즈 데 오시에테 쿠다사이","mean":"지도로 알려 주세요"},{"cat":"길 묻기","jp":"左に曲がります","kana":"ひだり に まがります","ko":"히다리 니 마가리마스","mean":"왼쪽으로 돌아요"},{"cat":"길 묻기","jp":"右ですか、左ですか","kana":"みぎ ですか ひだり ですか","ko":"미기 데스카 히다리 데스카","mean":"오른쪽이에요, 왼쪽이에요?"},{"cat":"길 묻기","jp":"近くに駅はありますか","kana":"ちかく に えき は ありますか","ko":"치카쿠 니 에키 와 아리마스카","mean":"근처에 역 있나요?"},{"cat":"긴급·건강","jp":"助けてください","kana":"たすけて ください","ko":"타스케테 쿠다사이","mean":"도와주세요"},{"cat":"긴급·건강","jp":"警察を呼んでください","kana":"けいさつ を よんで ください","ko":"케이사츠 오 욘데 쿠다사이","mean":"경찰 불러 주세요"},{"cat":"긴급·건강","jp":"救急車を呼んでください","kana":"きゅうきゅうしゃ を よんで ください","ko":"큐-큐-샤 오 욘데 쿠다사이","mean":"구급차 불러 주세요"},{"cat":"긴급·건강","jp":"気分が悪いです","kana":"きぶん が わるい です","ko":"키분 가 와루이 데스","mean":"몸이 안 좋아요"},{"cat":"긴급·건강","jp":"お腹が痛いです","kana":"おなか が いたい です","ko":"오나카 가 이타이 데스","mean":"배가 아파요"},{"cat":"긴급·건강","jp":"頭が痛いです","kana":"あたま が いたい です","ko":"아타마 가 이타이 데스","mean":"머리가 아파요"},{"cat":"긴급·건강","jp":"熱があります","kana":"ねつ が あります","ko":"네츠 가 아리마스","mean":"열이 있어요"},{"cat":"긴급·건강","jp":"薬局はどこですか","kana":"やっきょく は どこ ですか","ko":"얏쿄쿠 와 도코 데스카","mean":"약국은 어디예요?"},{"cat":"긴급·건강","jp":"病院に行きたいです","kana":"びょういん に いきたい です","ko":"뵤-인 니 이키타이 데스","mean":"병원에 가고 싶어요"},{"cat":"긴급·건강","jp":"財布をなくしました","kana":"さいふ を なくしました","ko":"사이후 오 나쿠시마시타","mean":"지갑을 잃어버렸어요"},{"cat":"긴급·건강","jp":"パスポートをなくしました","kana":"ぱすぽーと を なくしました","ko":"파스포-토 오 나쿠시마시타","mean":"여권을 잃어버렸어요"},{"cat":"긴급·건강","jp":"交番はどこですか","kana":"こうばん は どこ ですか","ko":"코-반 와 도코 데스카","mean":"파출소는 어디예요?"},{"cat":"긴급·건강","jp":"韓国大使館に連絡したいです","kana":"かんこく たいしかん に れんらく したい です","ko":"칸코쿠 타이시칸 니 렌라쿠 시타이 데스","mean":"한국 대사관에 연락하고 싶어요"}]}};
+window.google = { script: { run: (function () {
+  let ok = () => {};
+  const api = {
+    withSuccessHandler(f) { ok = f; return api; },
+    withFailureHandler() { return api; },
+    getVerbs() { const f = ok; setTimeout(() => f(APP_DATA.verbs)); },
+    getTravel() { const f = ok; setTimeout(() => f(APP_DATA.travel)); }
+  };
+  return api;
+})() } };
+</script>
+<script>
+const LABELS = {
+  te:'연결형 (~て)', masu:'정중형 (~ます)', masen:'부정 정중 (~ません)', mashita:'과거 정중 (~ました)',
+  masendeshita:'과거 정중 부정 (~ませんでした)', ta:'반말 과거 (~た)', nakatta:'반말 과거부정 (~なかった)'
+};
+const KEYS = Object.keys(LABELS);
+
+const RULES = {
+  0: `<b>동사 그룹 구분법</b><br>
+      · <b>3그룹</b>: する(하다), 来る(오다) 단 2개 — 통째로 외우기<br>
+      · <b>2그룹</b>: 「い단/え단 + る」로 끝남 → る를 떼고 ます・て・た・なかった를 붙임<br>
+      · <b>1그룹</b>: 나머지 전부 (る로 끝나도 앞이 あ・う・お단이면 1그룹, 帰る・入る・走る・知る・切る・要る는 예외적으로 1그룹)`,
+  1: `<b>1그룹 규칙</b> — ます형: 어미를 い단으로 (買う→買います) / なかった: 어미를 あ단으로 (う는 わ: 買わなかった)
+      <table><tr><th>어미</th><th>て형 / た형</th><th>예</th></tr>
+      <tr><td>う・つ・る</td><td>って / った</td><td>買って・待って・取って</td></tr>
+      <tr><td>く</td><td>いて / いた</td><td>書いて (예외: 行く→行って)</td></tr>
+      <tr><td>ぐ</td><td>いで / いだ</td><td>泳いで</td></tr>
+      <tr><td>ぬ・ぶ・む</td><td>んで / んだ</td><td>死んで・遊んで・飲んで</td></tr>
+      <tr><td>す</td><td>して / した</td><td>話して</td></tr></table>`,
+  2: `<b>2그룹 규칙</b> — る를 떼고 붙이기만 하면 끝!<br>
+      食べる → 食べて / 食べます / 食べません / 食べました / 食べませんでした / 食べた / 食べなかった`,
+  3: `<b>3그룹 (불규칙)</b><br>
+      する → して・します・しません・しました・しませんでした・した・しなかった<br>
+      来る(くる) → 来て(きて)・来ます(きます)・来ました(きました)・来た(きた)・<b>来なかった(こなかった)</b> ← 부정만 こ!`
+};
+
+let VERBS = [], group = 0, mode = 'table', query = '', focus = '';
+
+// 7가지 형태: [이름, 어미, 한국어 뜻]
+const FORM_INFO = {
+  te: ['연결형', '~て', '~하고 / ~해서'], masu: ['정중형', '~ます', '~합니다'], masen: ['부정 정중형', '~ません', '~하지 않습니다'],
+  mashita: ['과거 정중형', '~ました', '~했습니다'], masendeshita: ['과거 부정 정중형', '~ませんでした', '~하지 않았습니다'],
+  ta: ['반말 과거형', '~た', '~했다'], nakatta: ['반말 과거 부정형', '~なかった', '~하지 않았다']
+};
+function renderFormBar() {
+  const bar = document.getElementById('formbar');
+  bar.innerHTML = `<span class="fbl">형태 강조 · 연습:</span>
+    <button class="fchip ${!focus ? 'on' : ''}" data-f="">전체</button>` +
+    KEYS.map(k => `<button class="fchip ${POLITE.includes(k) ? 'pol' : 'cas'} ${focus === k ? 'on' : ''}" data-f="${k}">
+      <b>${FORM_INFO[k][0]}</b> <span>${FORM_INFO[k][1]}</span></button>`).join('');
+}
+document.getElementById('formbar').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]'); if (!b) return;
+  focus = focus === b.dataset.f ? '' : b.dataset.f; render();
+});
+// 표·카드 칸을 누르면 발음 듣기
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-say]');
+  if (c && !e.target.closest('.spk')) speak(c.dataset.say);
+});
+
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function speak(text) {
+  if (!window.speechSynthesis) { alert('이 브라우저는 음성 재생을 지원하지 않아요.'); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ja-JP'; u.rate = 0.85;
+  const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith('ja'));
+  if (v) u.voice = v;
+  speechSynthesis.speak(u);
+}
+const spk = kana => `<button class="spk" onclick="speak('${esc(kana)}')" title="발음 듣기">🔊</button>`;
+
+function filtered() {
+  const q = query.trim().toLowerCase();
+  return VERBS.filter(v => (!group || v.group === group) &&
+    (!q || [v.kanji, v.kana, v.meaning, v.ko].some(x => String(x).toLowerCase().includes(q))));
+}
+
+function render() {
+  stopListen();
+  document.getElementById('rule').innerHTML = RULES[group];
+  document.getElementById('rule').classList.toggle('hidden', mode === 'table');   // 한눈에 보기는 규칙이 표 안에 있음
+  document.getElementById('ovopts').classList.toggle('hidden', mode !== 'table' && mode !== 'card');
+  renderFormBar();
+  const list = filtered();
+  document.getElementById('count').textContent = list.length + '개';
+  const view = document.getElementById('view');
+  if (mode === 'card') view.innerHTML = renderCards(list);
+  else if (mode === 'table') view.innerHTML = renderTable(list);
+  else if (mode === 'speak') renderSpeak(list);
+  else renderQuiz(list);
+}
+
+function renderCards(list) {
+  return '<div class="grid">' + list.map(v => `
+    <div class="card g${v.group}">
+      <div class="top">
+        <span class="badge">${v.group}그룹</span><span class="badge">${esc(v.cat)}</span><br>
+        <span class="verb">${esc(v.kanji)}</span><span class="reading">${esc(v.kana)} · ${esc(v.ko)}</span>${spk(v.kana)}
+        <div class="meaning">${esc(v.meaning)}</div>
+      </div>
+      <table>${KEYS.map(k => `
+        <tr class="${focus === k ? 'hl' : ''}">
+          <td class="lbl">${LABELS[k]}</td>
+          <td><span class="jp">${(([s, e]) => esc(s) + '<span class="end">' + esc(e) + '</span>')(splitStem(v.kanji, v.forms[k].jp))}</span>${spk(v.forms[k].kana)}
+              <span class="kn">${esc(v.forms[k].kana)} · <span class="ko">${esc(v.forms[k].ko)}</span></span></td>
+        </tr>`).join('')}
+      </table>
+    </div>`).join('') + '</div>';
+}
+
+/* ─── 📊 한눈에 보기 ─── */
+// 그룹 → 어미 묶음 (て형 규칙이 같은 것끼리)
+const OV_GROUPS = {
+  1: { title: '1그룹 동사', sub: '5단 동사 · 어미가 바뀌어요',
+       formula: ['ます형: 어미 → い단 + ます (買う→買います)', 'なかった: 어미 → あ단 + なかった (う는 わ: 買わなかった)'],
+       subs: [
+         { t: 'う・つ・る', cats: ['う', 'つ', 'る', 'る (예외)'], rule: 'う・つ・る → って / った', note: '帰る・入る・走る・知る・切る・要る는 2그룹처럼 생겼지만 1그룹 (예외)' },
+         { t: 'く・ぐ', cats: ['く', 'く (특수)', 'ぐ'], rule: 'く → いて / いた · ぐ → いで / いだ', note: '예외: 行く → 行って・行った' },
+         { t: 'ぬ・ぶ・む', cats: ['ぬ', 'ぶ', 'む'], rule: 'ぬ・ぶ・む → んで / んだ' },
+         { t: 'す', cats: ['す'], rule: 'す → して / した' } ] },
+  2: { title: '2그룹 동사', sub: '1단 동사 · る만 떼면 끝',
+       formula: ['모든 형태: る를 떼고 て・ます・ません・ました・ませんでした・た・なかった를 붙임'],
+       subs: [
+         { t: 'い단 + る', cats: ['い단+る'], rule: 'る → て / ます / た …' },
+         { t: 'え단 + る', cats: ['え단+る'], rule: 'る → て / ます / た …' } ] },
+  3: { title: '3그룹 동사', sub: '불규칙 · 통째로 외우기',
+       formula: ['する → し + て/ます/た/なかった', '来る(くる) → き + て/ます/た · 부정만 こ + なかった'],
+       subs: [ { t: 'する・来る', cats: ['불규칙'], rule: '불규칙 활용', note: '来なかった는 「こなかった」로 읽어요!' } ] }
+};
+const POLITE = ['masu', 'masen', 'mashita', 'masendeshita'];
+const SHORT_LABEL = { te: '~て 연결형', masu: '~ます 정중', masen: '~ません 부정 정중', mashita: '~ました 과거 정중',
+                      masendeshita: '~ませんでした 과거 정중 부정', ta: '~た 반말 과거', nakatta: '~なかった 반말 과거부정' };
+
+// 기본형과 같은 앞부분(어간)과 바뀐 끝부분으로 나누기
+function splitStem(base, jp) {
+  let i = 0; const lim = Math.max(0, base.length - 1);
+  while (i < lim && base[i] === jp[i]) i++;
+  return [jp.slice(0, i), jp.slice(i)];
+}
+function formCell(v, k) {
+  const f = v.forms[k], [stem, end] = splitStem(v.kanji, f.jp);
+  return `<td class="fc ${POLITE.includes(k) ? 'pol' : 'cas'} ${focus === k ? 'hl' : ''}" data-say="${esc(f.kana)}"
+    data-label="${FORM_INFO[k][0]} ${FORM_INFO[k][1]}" title="눌러서 발음 듣기">
+    <span class="fj">${esc(stem)}<span class="end">${esc(end)}</span></span>
+    <span class="rd">${esc(f.kana)}</span><span class="pr">${esc(f.ko)}</span></td>`;
+}
+
+function ruleChart() {
+  const ex = [['買う', '1그룹', 1], ['飲む', '1그룹', 1], ['食べる', '2그룹', 2], ['する', '3그룹', 3], ['来る', '3그룹', 3]]
+    .map(([k, l, g]) => ({ v: VERBS.find(v => v.kanji === k), l, g })).filter(x => x.v);
+  if (!ex.length) return '';
+  const cell = (v, k) => { const f = v.forms[k], [s, e] = splitStem(v.kanji, f.jp);
+    return `<td class="fc" data-say="${esc(f.kana)}"><span class="fj">${esc(s)}<span class="end">${esc(e)}</span></span><span class="pr">${esc(f.ko)}</span></td>`; };
+  return `<details class="rulebox" open><summary>📋 활용 규칙 한눈에 보기 <small>(칸을 누르면 발음)</small></summary>
+    <div class="ov-wrap"><table class="ov rc">
+      <thead><tr><th>형태</th><th>뜻</th>${ex.map(x => `<th class="rg${x.g}">${x.l}<br><b>${esc(x.v.kanji)}</b> ${esc(x.v.meaning)}</th>`).join('')}</tr></thead>
+      <tbody>${KEYS.map(k => `<tr class="${focus === k ? 'hlrow' : ''}">
+        <td class="${POLITE.includes(k) ? 'polc' : 'casc'}"><b>${FORM_INFO[k][0]}</b><br><span class="fend">${FORM_INFO[k][1]}</span></td>
+        <td class="kmean">${FORM_INFO[k][2]}</td>
+        ${ex.map(x => cell(x.v, k)).join('')}</tr>`).join('')}</tbody>
+    </table></div>
+    <div class="rulefoot">🔵 정중형(존댓말, ~ます 계열) · 🟠 반말 · <span class="end-demo">빨간 글자</span> = 바뀌는 부분</div>
+  </details>`;
+}
+
+function renderTable(list) {
+  const groups = group ? [group] : [1, 2, 3];
+  let html = query.trim() ? '' : ruleChart();
+  groups.forEach(g => {
+    const G = OV_GROUPS[g], inG = list.filter(v => v.group === g);
+    if (!inG.length) return;
+    const used = new Set();
+    const subs = G.subs.map(s => ({ ...s, verbs: inG.filter(v => s.cats.includes(v.cat) && used.add(v)) }));
+    const rest = inG.filter(v => !used.has(v));
+    if (rest.length) subs.push({ t: '기타', rule: '', verbs: rest });
+
+    html += `<section class="ov-sec g${g}">
+      <div class="ov-head">
+        <div><h2>${G.title} <small>${inG.length}개</small></h2><div class="desc">${G.sub}</div></div>
+        <div class="formula">${G.formula.map(f => `<span>${esc(f)}</span>`).join('')}</div>
+      </div>`;
+    subs.filter(s => s.verbs.length).forEach(s => {
+      html += `<div class="ov-subh"><span class="endbig">${esc(s.t)}</span>
+          ${s.rule ? `<span class="rulechip">て/た형: ${esc(s.rule)}</span>` : ''}
+          ${s.note ? `<span class="notechip">⚠ ${esc(s.note)}</span>` : ''}</div>
+        <div class="ov-wrap"><table class="ov">
+          <thead><tr>
+            <th class="sticky">어미 · 기본형 · 뜻</th>
+            ${KEYS.map(k => `<th class="${POLITE.includes(k) ? 'pol' : 'cas'} ${focus === k ? 'hl' : ''}"><b>${FORM_INFO[k][0]}</b><span>${FORM_INFO[k][1]}</span></th>`).join('')}
+          </tr></thead><tbody>
+          ${s.verbs.map(v => `<tr>
+            <td class="sticky">
+              <div class="basewrap"><span class="cat">${esc(v.cat.replace(' (예외)', '').replace(' (특수)', ''))}</span>
+              <div><span class="bk">${esc(v.kanji)}</span>${spk(v.kana)}
+                ${/예외|특수/.test(v.cat) ? `<span class="exc">${/예외/.test(v.cat) ? '예외' : '특수'}</span>` : ''}
+                <span class="rd">${esc(v.kana)}</span><span class="pr">${esc(v.ko)}</span>
+                <span class="bm">${esc(v.meaning)}</span></div></div>
+            </td>
+            ${KEYS.map(k => formCell(v, k)).join('')}
+          </tr>`).join('')}
+          </tbody></table></div>`;
+    });
+    html += '</section>';
+  });
+  return html || '<div class="loading">해당하는 동사가 없어요.</div>';
+}
+
+// 표시 옵션 (읽기 / 발음 / 뜻)
+[['optRd', 'hide-rd'], ['optPr', 'hide-pr'], ['optMean', 'hide-mean']].forEach(([id, cls]) =>
+  document.getElementById(id).addEventListener('change', e => document.body.classList.toggle(cls, !e.target.checked)));
+
+let quizItem = null;
+function renderQuiz(list) {
+  const view = document.getElementById('view');
+  if (!list.length) { view.innerHTML = '<div class="loading">해당하는 동사가 없어요.</div>'; return; }
+  const v = list[Math.floor(Math.random() * list.length)];
+  const k = focus || KEYS[Math.floor(Math.random() * KEYS.length)];
+  quizItem = { v, k };
+  view.innerHTML = `<div class="quiz">
+      <span class="badge">${v.group}그룹 · ${esc(v.cat)}</span>
+      <div class="q">${esc(v.kanji)} ${spk(v.kana)}</div>
+      <div style="color:var(--sub)">${esc(v.kana)} (${esc(v.ko)}) — ${esc(v.meaning)}</div>
+      <div class="ask">👉 ${LABELS[k]} 은?</div>
+      <div class="ans" id="ans">?</div>
+      <button class="btn" onclick="reveal()">정답 보기</button>
+      <button class="btn alt" onclick="render()">다음 문제</button>
+      <div style="font-size:12px;color:var(--sub);margin-top:10px">위의 '형태' 버튼을 누르면 그 형태만 집중 연습해요.</div>
+    </div>`;
+}
+function reveal() {
+  const f = quizItem.v.forms[quizItem.k];
+  document.getElementById('ans').innerHTML =
+    `${esc(f.jp)} ${spk(f.kana)}<br><span style="font-size:15px;color:var(--sub)">${esc(f.kana)} · <span class="ko">${esc(f.ko)}</span></span>`;
+  speak(f.kana);
+}
+
+document.getElementById('tabs').addEventListener('click', e => {
+  if (!e.target.dataset.g) return;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  e.target.classList.add('on'); group = +e.target.dataset.g; render();
+});
+document.getElementById('modes').addEventListener('click', e => {
+  if (!e.target.dataset.m) return;
+  document.querySelectorAll('.mode').forEach(b => b.classList.remove('on'));
+  e.target.classList.add('on'); mode = e.target.dataset.m; render();
+});
+document.getElementById('q').addEventListener('input', e => { query = e.target.value; if (mode !== 'quiz' && mode !== 'speak') render(); });
+
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {};
+
+/* ═════════════ 음성 인식 (공통) ═════════════ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, micReady = false, spAutoNext = true, spAutoMic = true;
+
+function stopListen() {
+  if (rec) { try { rec.onend = null; rec.onresult = null; rec.onerror = null; rec.abort(); } catch (e) {} }
+  rec = null;
+  document.querySelectorAll('.mic.rec').forEach(b => b.classList.remove('rec'));
+}
+
+/** 일본어 음성 인식 시작 → onAlts(후보 문자열 배열) */
+function startListen(onAlts, statusEl, btn) {
+  if (!SR) { statusEl.innerHTML = '⚠ 이 브라우저는 음성 인식을 지원하지 않아요. <b>Chrome</b>(PC·안드로이드)이나 아이폰 Safari에서 열어 주세요.'; return; }
+  stopListen();
+  const r = new SR();
+  r.lang = 'ja-JP'; r.interimResults = true; r.maxAlternatives = 5; r.continuous = false;
+  let got = false, errored = false;
+  r.onresult = e => {
+    const res = e.results[e.results.length - 1];
+    const alts = [...res].map(a => a.transcript.trim()).filter(Boolean);
+    if (res.isFinal) { got = true; micReady = true; onAlts(alts); }
+    else statusEl.innerHTML = '🎙 듣는 중… <b>' + esc(alts[0] || '') + '</b>';
+  };
+  r.onerror = e => {
+    errored = true;
+    const msg = {
+      'not-allowed': '마이크 권한이 막혀 있어요. 주소창의 🔒(또는 ⚙) → 마이크 "허용" 후 새로고침하세요.',
+      'service-not-allowed': '마이크 권한이 막혀 있어요. 브라우저 설정에서 마이크를 허용해 주세요.',
+      'no-speech': '소리가 안 들렸어요. 🎤를 누르고 다시 말해 보세요.',
+      'audio-capture': '마이크를 찾을 수 없어요.',
+      'network': '음성 인식 서버에 연결하지 못했어요. 인터넷 연결을 확인하세요.',
+      'aborted': ''
+    }[e.error];
+    if (msg !== '') statusEl.innerHTML = '⚠ ' + (msg || '음성 인식 오류: ' + esc(e.error));
+  };
+  r.onend = () => {
+    btn && btn.classList.remove('rec');
+    if (!got && !errored) statusEl.innerHTML = '말이 인식되지 않았어요. 🎤를 누르고 다시 말해 보세요.';
+    rec = null;
+  };
+  try {
+    r.start(); rec = r;
+    btn && btn.classList.add('rec');
+    statusEl.innerHTML = '🎙 듣는 중… 일본어로 말하세요';
+  } catch (err) { statusEl.innerHTML = '⚠ ' + esc(err.message); }
+}
+
+const norm = s => toHira(String(s)).replace(/[。、！？!?.．\s「」]/g, '');
+
+/* ─── 동사 말하기 퀴즈 ─── */
+let spq = null, spShowJp = false, spSt = { ok: 0, ng: 0, streak: 0 };
+
+/** 인식 결과가 정답인지 (뜻이 같은 다른 동사도 인정: 言う/話す 등) */
+function verbMatch(alts, v, k) {
+  const cands = VERBS.filter(x => x === v || (x.koForms && v.koForms && x.koForms.base === v.koForms.base));
+  const A = alts.map(norm);
+  for (const a of A) for (const x of cands) {
+    const f = x.forms[k];
+    if (a === norm(f.jp) || a === norm(f.kana)) return { ok: true, x };
+  }
+  // 발음은 같은데 다른 한자로 인식된 경우 (예: 取りました → 撮りました)
+  const f = v.forms[k], tail = (f.jp.match(/[ぁ-ゖ]+$/) || [''])[0];
+  for (const a of A) {
+    if (tail && a.endsWith(tail) && a.length === norm(f.jp).length && /[一-鿿]/.test(a)) return { ok: true, x: v, homo: true };
+  }
+  return { ok: false };
+}
+
+function renderSpeak(list) {
+  stopListen();
+  const view = document.getElementById('view');
+  const pool = list.filter(v => v.koForms);
+  if (!pool.length) { view.innerHTML = '<div class="loading">해당하는 동사가 없어요.</div>'; return; }
+  const v = pool[Math.floor(Math.random() * pool.length)];
+  const k = focus || KEYS[Math.floor(Math.random() * KEYS.length)];
+  spq = { v, k, start: Date.now(), done: false, failed: false };
+  view.innerHTML = `<div class="quiz">
+      <div class="stats">
+        <span>맞힘 <b>${spSt.ok}</b></span><span>틀림 <b>${spSt.ng}</b></span><span>연속 <b>${spSt.streak}</b></span>
+      </div>
+      <span class="badge">${LABELS[k]}</span>
+      <div class="koq" style="margin-top:8px">${esc(v.koForms[k])}</div>
+      <div style="color:var(--sub);margin-top:6px">기본형: ${esc(v.koForms.base)}
+        <span id="jpHint" class="${spShowJp ? '' : 'hidden'}"> → ${esc(v.kanji)} (${esc(v.kana)})</span>
+        <a href="#" onclick="spShowJp=!spShowJp;document.getElementById('jpHint').classList.toggle('hidden');return false" style="font-size:12px">[일본어 힌트]</a>
+      </div>
+      <div style="margin:20px 0 6px"><button class="mic" id="micBtn" onclick="speakTry()">🎤</button></div>
+      <div class="heard" id="heard">🎤를 누르고 일본어로 말하세요 (스페이스바도 가능)</div>
+      <div id="spAns" class="ans" style="font-size:22px"></div>
+      <div>
+        <button class="btn alt" onclick="spReveal()">정답 보기</button>
+        <button class="btn alt" onclick="render()">다음 ▶</button>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" ${spAutoNext ? 'checked' : ''} onchange="spAutoNext=this.checked"> 정답이면 자동으로 다음</label> ·
+        <label><input type="checkbox" ${spAutoMic ? 'checked' : ''} onchange="spAutoMic=this.checked"> 문제가 나오면 바로 듣기</label><br>
+        위의 '형태' 버튼을 누르면 그 형태만 나와요 (예: 과거 부정 정중형)
+      </div>
+    </div>`;
+  if (spAutoMic && micReady) setTimeout(() => { if (spq && spq.v === v && !spq.done) speakTry(); }, 400);
+}
+
+function speakTry() {
+  if (!spq || spq.done) return;
+  startListen(judgeSpeak, document.getElementById('heard'), document.getElementById('micBtn'));
+}
+
+function formAnswerHtml(f) {
+  return `${esc(f.jp)} ${spk(f.kana)}<br><span style="font-size:15px;color:var(--sub)">${esc(f.kana)} · <span class="ko">${esc(f.ko)}</span></span>`;
+}
+
+function judgeSpeak(alts) {
+  const sec = ((Date.now() - spq.start) / 1000).toFixed(1);
+  const r = verbMatch(alts, spq.v, spq.k);
+  document.getElementById('heard').innerHTML = '인식된 말: <b>' + esc(alts[0] || '') + '</b>' +
+    (alts.length > 1 ? ` <small>(후보: ${alts.slice(1, 3).map(esc).join(', ')})</small>` : '');
+  const ans = document.getElementById('spAns');
+  if (r.ok) {
+    spq.done = true;
+    if (!spq.failed) { spSt.ok++; spSt.streak++; }
+    const extra = r.x !== spq.v ? `<div class="count">(${esc(r.x.kanji)}도 같은 뜻이라 정답!)</div>` : '';
+    ans.innerHTML = `<div class="ok">⭕ 정답! <span class="timer">${sec}초</span></div>${formAnswerHtml(r.x.forms[spq.k])}${extra}`;
+    if (spAutoNext) { const cur = spq; setTimeout(() => { if (mode === 'speak' && spq === cur) render(); }, 1400); }
+  } else {
+    if (!spq.failed) { spq.failed = true; spSt.ng++; spSt.streak = 0; }
+    ans.innerHTML = `<div class="ng">❌ 다시 말해 보세요</div>
+      <button class="btn alt" style="font-size:13px" onclick="speakTry()">🎤 다시 말하기</button>
+      <button class="btn alt" style="font-size:13px" onclick="spOverride()">맞게 말했어요 (인식 오류)</button>`;
+  }
+}
+
+function spOverride() {
+  if (!spq) return;
+  spq.done = true;
+  if (spq.failed) { spSt.ng--; spq.failed = false; }
+  spSt.ok++; spSt.streak++;
+  render();
+}
+
+function spReveal() {
+  if (!spq) return;
+  stopListen();
+  if (!spq.done && !spq.failed) { spSt.ng++; spSt.streak = 0; spq.failed = true; }
+  const f = spq.v.forms[spq.k];
+  document.getElementById('spAns').innerHTML = formAnswerHtml(f) +
+    `<div><button class="btn alt" style="font-size:13px" onclick="speakTry()">🎤 따라 말해 보기</button></div>`;
+  speak(f.kana);
+}
+
+// 스페이스바 = 마이크
+document.addEventListener('keydown', e => {
+  if (e.code !== 'Space' || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  const on = id => !document.getElementById(id).classList.contains('hidden');
+  if (on('numApp') && nmode === 'speak') { e.preventDefault(); numListen(); }
+  else if (on('verbApp') && mode === 'speak') { e.preventDefault(); speakTry(); }
+  else if (on('travelApp') && tmode === 'quiz') { e.preventDefault(); tqListen(); }
+});
+
+/* ═════════════ 숫자 퀴즈 ═════════════ */
+
+// 상단 메뉴 전환
+document.querySelector('.nav').addEventListener('click', e => {
+  const id = e.target.dataset.app; if (!id) return;
+  stopListen();
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('on', b === e.target));
+  ['verbApp', 'numApp', 'travelApp'].forEach(x => document.getElementById(x).classList.toggle('hidden', x !== id));
+  if (id === 'numApp' && !numQ) nextNum();
+  if (id === 'travelApp') loadTravel();
+});
+
+const D1  = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう'];
+const HUN = ['', 'ひゃく', 'にひゃく', 'さんびゃく', 'よんひゃく', 'ごひゃく', 'ろっぴゃく', 'ななひゃく', 'はっぴゃく', 'きゅうひゃく'];
+const THO = ['', 'せん', 'にせん', 'さんぜん', 'よんせん', 'ごせん', 'ろくせん', 'ななせん', 'はっせん', 'きゅうせん'];
+const IRR = ['さんびゃく', 'ろっぴゃく', 'はっぴゃく', 'さんぜん', 'はっせん'];  // 소리가 바뀌는 것
+
+/** 숫자 → 자리별 조각 [{kana, label}] */
+function numParts(n) {
+  const p = [];
+  const man = Math.floor(n / 10000), th = Math.floor(n / 1000) % 10,
+        hu = Math.floor(n / 100) % 10, te = Math.floor(n / 10) % 10, on = n % 10;
+  if (man) p.push({ kana: D1[man] + 'まん', label: (man * 10000).toLocaleString() });
+  if (th)  p.push({ kana: THO[th], label: (th * 1000).toLocaleString() });
+  if (hu)  p.push({ kana: HUN[hu], label: String(hu * 100) });
+  if (te)  p.push({ kana: (te === 1 ? '' : D1[te]) + 'じゅう', label: String(te * 10) });
+  if (on)  p.push({ kana: D1[on], label: String(on) });
+  return p;
+}
+const numKana = n => numParts(n).map(p => p.kana).join('');
+
+/** 입력 정답으로 인정할 표기 (4=し, 7=しち, 9=く 등) */
+function numAccepts(n) {
+  const base = numKana(n), set = new Set([base]);
+  const on = n % 10, te = Math.floor(n / 10) % 10;
+  const alt = { 4: 'し', 7: 'しち', 9: 'く' };
+  if (alt[on] && on !== 9) set.add(base.slice(0, -D1[on].length) + alt[on]);
+  if (on === 9) set.add(base.slice(0, -D1[9].length) + 'く');
+  if (te === 7) [...set].forEach(s => set.add(s.replace('ななじゅう', 'しちじゅう')));
+  return set;
+}
+const toHira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
+                     .replace(/[\s,、・ー-]/g, '');
+
+// 히라가나 → 한글 발음 (Code.gs와 같은 규칙)
+const KS = 'あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわを';
+const HS = '아이우에오카키쿠케코가기구게고사시스세소자지즈제조타치츠테토다지즈데도나니누네노하히후헤호바비부베보파피푸페포마미무메모야유요라리루레로와오';
+const YO = { 'き':'캬큐쿄','ぎ':'갸규교','し':'샤슈쇼','じ':'자주조','ち':'차추초','に':'냐뉴뇨','ひ':'햐휴효','び':'뱌뷰뵤','ぴ':'퍄퓨표','み':'먀뮤묘','り':'랴류료' };
+function addFin(s, f) { const c = s.charCodeAt(s.length - 1) - 0xAC00; return (c >= 0 && c <= 11171 && c % 28 === 0) ? s.slice(0, -1) + String.fromCharCode(0xAC00 + c + f) : s; }
+function hangul(k) {
+  let o = '';
+  for (let i = 0; i < k.length; i++) {
+    const c = k[i], sm = 'ゃゅょ'.indexOf(k[i + 1]);
+    if (YO[c] && sm >= 0) { o += YO[c][sm]; i++; continue; }
+    if (c === 'っ') { o = addFin(o, 19); continue; }
+    if (c === 'ん') { o = addFin(o, 4); continue; }
+    if (c === 'う' && o) {                                   // 장음: じゅう → 주-
+      const code = o.charCodeAt(o.length - 1) - 0xAC00, m = Math.floor(code % 588 / 28);
+      if (code >= 0 && code % 28 === 0 && [8, 12, 13, 17].includes(m)) { o += '-'; continue; }
+    }
+    const x = KS.indexOf(c); o += x >= 0 ? HS[x] : c;
+  }
+  return o;
+}
+
+const RANGES = { 1: [1, 10], 2: [11, 99], 3: [100, 999], 4: [1000, 9999], 5: [10000, 99999], 6: [1, 99999] };
+let lv = 1, nmode = 'read', numQ = null, seqNext = {}, startT = 0, answered = false;
+let st = { ok: 0, ng: 0, streak: 0, times: [] }, wrong = new Set(), retryQueue = [];
+
+function pickNum() {
+  if (retryQueue.length) return retryQueue.shift();
+  const [lo, hi] = RANGES[lv];
+  if (document.getElementById('seq').checked) {
+    let n = seqNext[lv] || lo;
+    seqNext[lv] = n + 1 > hi ? lo : n + 1;
+    // 큰 단계는 순서대로 하면 너무 길어서 단위별로 건너뜀
+    if (lv === 4) seqNext[lv] = n + 111 > hi ? lo : n + 111;
+    if (lv === 5) seqNext[lv] = n + 1111 > hi ? lo : n + 1111;
+    if (lv === 6) return lo + Math.floor(Math.random() * (hi - lo + 1));
+    return n;
+  }
+  return lo + Math.floor(Math.random() * (hi - lo + 1));
+}
+
+function nextNum() {
+  stopListen();
+  numQ = pickNum(); answered = false; numFailed = false; startT = Date.now();
+  const box = document.getElementById('numBox');
+  if (nmode === 'speak') {
+    box.innerHTML = `
+      <div class="numq">${numQ.toLocaleString()}</div>
+      <div class="ask">👉 일본어로 말하세요</div>
+      <button class="mic" id="nMic" onclick="numListen()">🎤</button>
+      <div class="heard" id="nHeard">🎤를 누르고 말하세요 (스페이스바도 가능)</div>
+      <div id="numAns" class="ans"></div>
+      <button class="btn alt" onclick="numGiveUp()">정답 보기</button>
+      <button class="btn alt" onclick="nextNum()">다음 ▶</button>
+      <div class="opts">
+        <label><input type="checkbox" ${spAutoNext ? 'checked' : ''} onchange="spAutoNext=this.checked"> 정답이면 자동으로 다음</label> ·
+        <label><input type="checkbox" ${spAutoMic ? 'checked' : ''} onchange="spAutoMic=this.checked"> 문제가 나오면 바로 듣기</label>
+      </div>`;
+    const q = numQ;
+    if (spAutoMic && micReady) setTimeout(() => { if (numQ === q && !answered) numListen(); }, 400);
+    return;
+  }
+  if (nmode === 'read') {
+    box.innerHTML = `
+      <div class="numq">${numQ.toLocaleString()}</div>
+      <div class="ask">👉 일본어로 읽어 보세요 (소리 내서 빠르게!)</div>
+      <input class="ansinput" id="numIn" placeholder="히라가나 입력 (선택) 후 Enter">
+      <div style="margin-top:10px">
+        <button class="btn" onclick="checkNum()">정답 보기</button>
+      </div>
+      <div id="numAns" class="ans"></div>`;
+  } else {
+    box.innerHTML = `
+      <div class="numq">🔊</div>
+      <div class="ask">👉 듣고 숫자를 입력하세요</div>
+      <button class="btn alt" onclick="speak(numKana(numQ))">다시 듣기</button><br><br>
+      <input class="ansinput" id="numIn" inputmode="numeric" placeholder="예: 3456 후 Enter">
+      <div style="margin-top:10px"><button class="btn" onclick="checkNum()">확인</button></div>
+      <div id="numAns" class="ans"></div>`;
+    speak(numKana(numQ));
+  }
+  const inp = document.getElementById('numIn');
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { answered ? nextNum() : checkNum(); } });
+  inp.focus();
+}
+
+function answerHtml(n) {
+  const parts = numParts(n);
+  return `<div style="font-size:30px">${esc(numKana(n))} ${spk(numKana(n))}</div>
+    <div class="ko" style="font-size:17px">${esc(hangul(numKana(n)))}</div>
+    <div class="parts">${parts.map(p =>
+      `<span class="part ${IRR.includes(p.kana) ? 'irr' : ''}">${esc(p.kana)}<small>${esc(p.label)} · ${esc(hangul(p.kana))}</small></span>`).join('')}</div>
+    ${parts.some(p => IRR.includes(p.kana)) ? '<div style="font-size:12px;color:#e65100;margin-top:6px">주황색 = 소리가 바뀌는 부분 (주의!)</div>' : ''}`;
+}
+
+function checkNum() {
+  if (answered) return;
+  answered = true;
+  const sec = (Date.now() - startT) / 1000;
+  const raw = (document.getElementById('numIn').value || '').trim();
+  const out = document.getElementById('numAns');
+  let result = null; // true/false/null(자가채점)
+
+  if (nmode === 'listen') {
+    result = parseInt(raw.replace(/[^0-9]/g, ''), 10) === numQ;
+  } else if (raw) {
+    result = numAccepts(numQ).has(toHira(raw));
+  }
+
+  const head = result === null ? '' :
+    `<div class="${result ? 'ok' : 'ng'}">${result ? '⭕ 정답!' : '❌ 틀렸어요'} <span class="timer">(${sec.toFixed(1)}초)</span></div>`;
+  out.innerHTML = head + (nmode === 'listen' ? `<div style="font-size:34px;font-weight:800">${numQ.toLocaleString()}</div>` : '') + answerHtml(numQ) +
+    (result === null
+      ? `<div style="margin-top:12px">맞게 읽었나요? <span class="timer">(${sec.toFixed(1)}초)</span><br>
+           <button class="btn" style="background:#2e7d32" onclick="grade(true, ${sec})">⭕ 맞음</button>
+           <button class="btn" style="background:#c62828" onclick="grade(false, ${sec})">❌ 틀림</button></div>`
+      : `<div style="margin-top:12px"><button class="btn" onclick="nextNum()">다음 (Enter) ▶</button></div>`);
+  if (nmode === 'read') speak(numKana(numQ));
+  if (result !== null) record(result, sec);
+}
+
+function grade(ok, sec) { record(ok, sec); nextNum(); }
+
+/* ─── 숫자 말하기 ─── */
+let numFailed = false;
+
+/** 인식 결과 → 숫자 ("34567", "3万4567", "三千五百" 등) */
+function parseJaNum(s) {
+  s = String(s).replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+               .replace(/[,，\s円。、です]/g, '');
+  if (/^\d+$/.test(s)) return +s;
+  const KD = { '〇': 0, '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+  const U = { '十': 10, '百': 100, '千': 1000 };
+  let total = 0, sec = 0, num = null;
+  for (const c of s) {
+    if (/\d/.test(c)) num = (num || 0) * 10 + +c;
+    else if (c in KD) num = (num || 0) * 10 + KD[c];
+    else if (c in U) { sec += (num === null ? 1 : num) * U[c]; num = null; }
+    else if (c === '万') { total += ((sec + (num || 0)) || 1) * 10000; sec = 0; num = null; }
+    else return NaN;
+  }
+  return total + sec + (num || 0);
+}
+
+function numListen() {
+  if (answered || nmode !== 'speak') return;
+  startListen(alts => {
+    const sec = (Date.now() - startT) / 1000;
+    const ok = alts.some(a => parseJaNum(a) === numQ || numAccepts(numQ).has(norm(a)));
+    const heardNum = alts.map(parseJaNum).find(n => !isNaN(n));
+    document.getElementById('nHeard').innerHTML = '인식된 말: <b>' + esc(alts[0] || '') + '</b>' +
+      (heardNum !== undefined && !ok ? ` → ${heardNum.toLocaleString()}` : '');
+    const out = document.getElementById('numAns');
+    if (ok) {
+      answered = true;
+      if (!numFailed) record(true, sec);
+      out.innerHTML = `<div class="ok">⭕ 정답! <span class="timer">(${sec.toFixed(1)}초)</span></div>` + answerHtml(numQ);
+      if (spAutoNext) { const q = numQ; setTimeout(() => { if (numQ === q && nmode === 'speak') nextNum(); }, 1400); }
+    } else {
+      if (!numFailed) { numFailed = true; record(false, sec); }
+      out.innerHTML = `<div class="ng">❌ 다시 말해 보세요</div>
+        <button class="btn alt" style="font-size:13px" onclick="numListen()">🎤 다시 말하기</button>
+        <button class="btn alt" style="font-size:13px" onclick="numOverride()">맞게 말했어요 (인식 오류)</button>`;
+    }
+  }, document.getElementById('nHeard'), document.getElementById('nMic'));
+}
+
+function numOverride() {
+  if (numFailed) { st.ng--; st.streak = 0; }
+  numFailed = false; record(true, (Date.now() - startT) / 1000); nextNum();
+}
+
+function numGiveUp() {
+  stopListen();
+  if (!answered && !numFailed) { numFailed = true; record(false, 0); }
+  document.getElementById('numAns').innerHTML = answerHtml(numQ) +
+    `<div><button class="btn alt" style="font-size:13px" onclick="numListen()">🎤 따라 말해 보기</button></div>`;
+  speak(numKana(numQ));
+}
+
+function record(ok, sec) {
+  if (ok) { st.ok++; st.streak++; st.times.push(sec); wrong.delete(numQ); }
+  else { st.ng++; st.streak = 0; wrong.add(numQ); }
+  document.getElementById('sOk').textContent = st.ok;
+  document.getElementById('sNg').textContent = st.ng;
+  document.getElementById('sStreak').textContent = st.streak;
+  const t = st.times.slice(-20);
+  document.getElementById('sAvg').textContent = t.length ? (t.reduce((a, b) => a + b, 0) / t.length).toFixed(1) : '-';
+  document.getElementById('wrongCnt').textContent = wrong.size;
+}
+
+function retryWrong() {
+  if (!wrong.size) { alert('틀린 숫자가 없어요! 👍'); return; }
+  retryQueue = [...wrong].sort(() => Math.random() - 0.5);
+  nextNum();
+}
+function resetNum() {
+  st = { ok: 0, ng: 0, streak: 0, times: [] }; wrong.clear(); retryQueue = []; seqNext = {};
+  ['sOk', 'sNg', 'sStreak'].forEach(id => document.getElementById(id).textContent = 0);
+  document.getElementById('sAvg').textContent = '-'; document.getElementById('wrongCnt').textContent = 0;
+  nextNum();
+}
+
+document.getElementById('levels').addEventListener('click', e => {
+  if (!e.target.dataset.lv) return;
+  document.querySelectorAll('.lv').forEach(b => b.classList.toggle('on', b === e.target));
+  lv = +e.target.dataset.lv; retryQueue = []; renderNumRef(); nextNum();
+});
+document.getElementById('nmodes').addEventListener('click', e => {
+  if (!e.target.dataset.nm) return;
+  document.querySelectorAll('#nmodes .mode').forEach(b => b.classList.toggle('on', b === e.target));
+  nmode = e.target.dataset.nm; nextNum();
+});
+document.getElementById('seq').addEventListener('change', nextNum);
+
+// 단계별 참고표
+function renderNumRef() {
+  const cell = (n, k) => `<td class="${IRR.includes(k) ? 'irr' : ''}">${n.toLocaleString()}<br>${esc(k)}<br><span class="ko">${esc(hangul(k))}</span></td>`;
+  const row = (title, f) => `<tr><th>${title}</th>${[1,2,3,4,5,6,7,8,9].map(d => cell(f(d).n, f(d).k)).join('')}</tr>`;
+  const rows = {
+    1: row('1~9', d => ({ n: d, k: D1[d] })) + `<tr><th>10</th><td colspan="9">10 じゅう (주우) · 0 ゼロ/れい</td></tr>`,
+    2: row('10단위', d => ({ n: d * 10, k: (d === 1 ? '' : D1[d]) + 'じゅう' })),
+    3: row('100단위', d => ({ n: d * 100, k: HUN[d] })),
+    4: row('1,000단위', d => ({ n: d * 1000, k: THO[d] })),
+    5: row('10,000단위', d => ({ n: d * 10000, k: D1[d] + 'まん' }))
+  };
+  const show = lv === 6 ? [1, 2, 3, 4, 5] : [lv];
+  document.getElementById('numRef').innerHTML =
+    `<b>📋 참고표</b> <span class="count">(주황색 = 소리 변화 주의 · 4는 よん/し, 7은 なな/しち, 9는 きゅう/く 둘 다 정답)</span>
+     <table style="margin-top:8px">${show.map(s => rows[s]).join('')}</table>
+     <div class="count" style="margin-top:6px">큰 숫자는 왼쪽부터 끊어 읽기: 34,567 → さんまん / よんせん / ごひゃく / ろくじゅう / なな</div>`;
+}
+renderNumRef();
+
+/* Apps Script 밖(미리보기 등)에서 열었을 때 안내 */
+const IN_GAS = typeof google !== 'undefined' && google.script && google.script.run;
+const NOT_GAS_MSG = '<div class="loading">이 화면은 미리보기라서 데이터를 불러올 수 없어요.<br>Apps Script에서 <b>배포 → 웹 앱</b>으로 배포한 주소로 열면 정상적으로 나와요.<br>(🔢 숫자 퀴즈는 미리보기에서도 사용할 수 있어요)</div>';
+
+/* ═════════════ 여행 일본어 ═════════════ */
+let TRAVEL = null, tmode = 'places', tcat = '전체', tday = '전체', tq = null, tqSt = { ok: 0, ng: 0, streak: 0 };
+
+function loadTravel() {
+  if (TRAVEL) return;
+  if (!IN_GAS) { document.getElementById('tview').innerHTML = NOT_GAS_MSG; return; }
+  google.script.run
+    .withSuccessHandler(d => { TRAVEL = d; renderTravel(); })
+    .withFailureHandler(err => { document.getElementById('tview').innerHTML = '<div class="loading">오류: ' + esc(err.message) + '</div>'; })
+    .getTravel();
+}
+
+document.getElementById('tmodes').addEventListener('click', e => {
+  if (!e.target.dataset.tm) return;
+  document.querySelectorAll('#tmodes .mode').forEach(b => b.classList.toggle('on', b === e.target));
+  tmode = e.target.dataset.tm; renderTravel();
+});
+
+// 두 문자열 비슷한 정도 (0~1) — 음성 인식 결과 채점용
+function similar(a, b) {
+  if (!a || !b) return 0;
+  const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return 1 - d[m][n] / Math.max(m, n);
+}
+function sayScore(alts, item) {
+  const targets = [norm(item.jp), norm(item.kana)];
+  return Math.max(0, ...alts.map(norm).flatMap(a => targets.map(t => similar(a, t))));
+}
+function scoreText(s) {
+  return s >= 0.95 ? '<span class="ok">⭕ 완벽해요!</span>' :
+         s >= 0.75 ? '<span class="ok">🙆 거의 맞아요!</span>' : '<span class="ng">❌ 다시 해 볼까요?</span>';
+}
+
+/** 카드의 🎤 따라 말하기 */
+function practice(btn, idx, kind) {
+  const item = kind === 'place' ? TRAVEL.places[idx] : TRAVEL.phrases[idx];
+  const box = btn.closest('.titem').querySelector('.say');
+  startListen(alts => {
+    box.innerHTML = '인식: <b>' + esc(alts[0] || '') + '</b> → ' + scoreText(sayScore(alts, item));
+  }, box, btn);
+}
+
+function showBig(idx, kind) {
+  const it = kind === 'place' ? TRAVEL.places[idx] : TRAVEL.phrases[idx];
+  document.getElementById('bigjp').textContent = it.jp;
+  document.getElementById('bigkana').textContent = it.kana;
+  document.getElementById('bigko').textContent = it.ko + ' · ' + (it.name || it.mean);
+  document.getElementById('bigshow').classList.remove('hidden');
+}
+
+function toggleTaxi(btn, idx) {
+  const p = TRAVEL.places[idx], box = btn.closest('.titem').querySelector('.taxi');
+  if (!box.classList.contains('hidden')) { box.classList.add('hidden'); return; }
+  // [일본어, 읽어 줄 문장, 한글 발음, 뜻]
+  const lines = [
+    [p.jp + 'までお願いします', p.kana + ' まで おねがい します', p.ko + ' 마데 오네가이 시마스', `${p.name}까지 가 주세요 (택시)`],
+    [p.jp + 'はどこですか', p.kana + ' わ どこ ですか', p.ko + ' 와 도코 데스카', `${p.name}은(는) 어디예요?`],
+    [p.jp + 'に行きたいです', p.kana + ' に いきたい です', p.ko + ' 니 이키타이 데스', `${p.name}에 가고 싶어요`]
+  ];
+  box.innerHTML = lines.map(([jp, say, ko, mean]) =>
+    `<div><b>${esc(jp)}</b> ${spk(say)}<br>
+     <span class="ko">${esc(ko)}</span> <span class="count">· ${esc(mean)}</span></div>`).join('');
+  box.classList.remove('hidden');
+}
+
+function filterBar(items, cur, onPick) {
+  const bar = document.getElementById('tfilter');
+  bar.innerHTML = ['전체', ...items].map(c => `<button class="chipc ${c === cur ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('') +
+    (tmode === 'phrases' ? '<input type="search" id="tq" placeholder="검색 (한국어·일본어)" style="flex:1;min-width:160px;padding:7px 10px;border:1px solid var(--line);border-radius:8px">' : '');
+  bar.querySelectorAll('.chipc').forEach(b => b.onclick = () => onPick(b.dataset.c));
+  const s = document.getElementById('tq');
+  if (s) s.oninput = () => renderPhraseList(s.value);
+}
+
+function renderTravel() {
+  stopListen();
+  if (!TRAVEL) return;
+  const view = document.getElementById('tview');
+  if (tmode === 'places') {
+    const days = [...new Set(TRAVEL.places.map(p => p.day))];
+    filterBar(days, tday, c => { tday = c; renderTravel(); });
+    let html = '<div class="count">「교토·오사카 5일」 여행 앱의 일정에서 가져온 장소예요. 🚕 버튼으로 택시·길 묻기 문장을 볼 수 있어요.</div>';
+    days.filter(d => tday === '전체' || d === tday).forEach(d => {
+      html += `<div class="dayh">${esc(d)}</div><div class="tlist">`;
+      TRAVEL.places.forEach((p, i) => {
+        if (p.day !== d) return;
+        html += `<div class="titem">
+          <div class="tj">${esc(p.jp)} ${spk(p.kana)}</div>
+          <div class="tk">${esc(p.kana)}</div>
+          <div class="th">${esc(p.ko)}</div>
+          <div class="tm"><b>${esc(p.name)}</b>${p.memo ? ' · ' + esc(p.memo) : ''}</div>
+          <div class="tacts">
+            <button class="sbtn" onclick="toggleTaxi(this, ${i})">🚕 택시·길 묻기</button>
+            <button class="sbtn" onclick="practice(this, ${i}, 'place')">🎤 따라 말하기</button>
+            <button class="sbtn" onclick="showBig(${i}, 'place')">🔍 크게 보여주기</button>
+          </div>
+          <div class="say"></div>
+          <div class="taxi hidden"></div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+    view.innerHTML = html;
+  } else if (tmode === 'phrases') {
+    const cats = [...new Set(TRAVEL.phrases.map(p => p.cat))];
+    filterBar(cats, tcat, c => { tcat = c; renderTravel(); });
+    renderPhraseList('');
+  } else {
+    const cats = [...new Set(TRAVEL.phrases.map(p => p.cat))];
+    filterBar(cats, tcat, c => { tcat = c; renderTravel(); });
+    nextTq();
+  }
+}
+
+function renderPhraseList(q) {
+  q = (q || '').trim().toLowerCase();
+  let html = '<div class="tlist">';
+  let n = 0;
+  TRAVEL.phrases.forEach((p, i) => {
+    if (tcat !== '전체' && p.cat !== tcat) return;
+    if (q && ![p.jp, p.kana, p.mean, p.ko].some(x => x.toLowerCase().includes(q))) return;
+    n++;
+    html += `<div class="titem">
+      <div class="tm"><span class="badge">${i + 1}. ${esc(p.cat)}</span> <b>${esc(p.mean)}</b></div>
+      <div class="tj" style="margin-top:4px">${esc(p.jp)} ${spk(p.jp)}</div>
+      <div class="tk">${esc(p.kana)}</div>
+      <div class="th">${esc(p.ko)}</div>
+      <div class="tacts">
+        <button class="sbtn" onclick="practice(this, ${i}, 'phrase')">🎤 따라 말하기</button>
+        <button class="sbtn" onclick="showBig(${i}, 'phrase')">🔍 크게 보여주기</button>
+      </div>
+      <div class="say"></div>
+    </div>`;
+  });
+  document.getElementById('tview').innerHTML = `<div class="count" style="margin-bottom:8px">${n}개 표현</div>` + html + '</div>';
+}
+
+/* ─── 표현 말하기 퀴즈: 한국어 보고 일본어로 말하기 ─── */
+function nextTq() {
+  stopListen();
+  const pool = TRAVEL.phrases.map((p, i) => i).filter(i => tcat === '전체' || TRAVEL.phrases[i].cat === tcat);
+  const idx = pool[Math.floor(Math.random() * pool.length)];
+  const p = TRAVEL.phrases[idx];
+  tq = { idx, start: Date.now(), done: false, failed: false };
+  document.getElementById('tview').innerHTML = `<div class="quiz">
+      <div class="stats"><span>맞힘 <b>${tqSt.ok}</b></span><span>틀림 <b>${tqSt.ng}</b></span><span>연속 <b>${tqSt.streak}</b></span></div>
+      <span class="badge">${esc(p.cat)}</span>
+      <div class="koq" style="margin-top:8px">${esc(p.mean)}</div>
+      <div class="ask">👉 일본어로 말해 보세요</div>
+      <div style="margin:14px 0 6px"><button class="mic" id="tqMic" onclick="tqListen()">🎤</button></div>
+      <div class="heard" id="tqHeard">🎤를 누르고 말하세요 (스페이스바도 가능)</div>
+      <div id="tqAns" class="ans" style="font-size:22px"></div>
+      <button class="btn alt" onclick="tqReveal()">정답 보기</button>
+      <button class="btn alt" onclick="nextTq()">다음 ▶</button>
+      <div class="opts">
+        <label><input type="checkbox" ${spAutoNext ? 'checked' : ''} onchange="spAutoNext=this.checked"> 정답이면 자동으로 다음</label> ·
+        <label><input type="checkbox" ${spAutoMic ? 'checked' : ''} onchange="spAutoMic=this.checked"> 문제가 나오면 바로 듣기</label>
+      </div>
+    </div>`;
+  if (spAutoMic && micReady) setTimeout(() => { if (tq && tq.idx === idx && !tq.done) tqListen(); }, 400);
+}
+
+function tqAnswerHtml(p) {
+  return `${esc(p.jp)} ${spk(p.jp)}<br><span style="font-size:15px;color:var(--sub)">${esc(p.kana)} · <span class="ko">${esc(p.ko)}</span></span>`;
+}
+
+function tqListen() {
+  if (!tq || tq.done) return;
+  const p = TRAVEL.phrases[tq.idx];
+  startListen(alts => {
+    const s = sayScore(alts, p), sec = ((Date.now() - tq.start) / 1000).toFixed(1);
+    document.getElementById('tqHeard').innerHTML = '인식된 말: <b>' + esc(alts[0] || '') + '</b>';
+    const out = document.getElementById('tqAns');
+    if (s >= 0.75) {
+      tq.done = true;
+      if (!tq.failed) { tqSt.ok++; tqSt.streak++; }
+      out.innerHTML = `<div>${scoreText(s)} <span class="timer">${sec}초</span></div>` + tqAnswerHtml(p);
+      if (spAutoNext) { const cur = tq; setTimeout(() => { if (tq === cur && tmode === 'quiz') nextTq(); }, 1800); }
+    } else {
+      if (!tq.failed) { tq.failed = true; tqSt.ng++; tqSt.streak = 0; }
+      out.innerHTML = `<div class="ng">❌ 다시 말해 보세요</div>
+        <button class="btn alt" style="font-size:13px" onclick="tqListen()">🎤 다시 말하기</button>
+        <button class="btn alt" style="font-size:13px" onclick="tqOverride()">맞게 말했어요 (인식 오류)</button>`;
+    }
+  }, document.getElementById('tqHeard'), document.getElementById('tqMic'));
+}
+function tqOverride() { if (tq.failed) tqSt.ng--; tq.failed = false; tqSt.ok++; tqSt.streak++; nextTq(); }
+function tqReveal() {
+  stopListen();
+  if (!tq.done && !tq.failed) { tq.failed = true; tqSt.ng++; tqSt.streak = 0; }
+  const p = TRAVEL.phrases[tq.idx];
+  document.getElementById('tqAns').innerHTML = tqAnswerHtml(p) +
+    `<div><button class="btn alt" style="font-size:13px" onclick="tqListen()">🎤 따라 말해 보기</button></div>`;
+  speak(p.jp);
+}
+
+if (!IN_GAS) document.getElementById('view').innerHTML = NOT_GAS_MSG;
+else google.script.run
+  .withSuccessHandler(data => { VERBS = data; render(); })
+  .withFailureHandler(err => { document.getElementById('view').innerHTML = '<div class="loading">오류: ' + esc(err.message) + '</div>'; })
+  .getVerbs();
+</script>
+<button id="installBtn" class="hidden" style="position:fixed;right:16px;bottom:16px;z-index:60;background:#b3364a;color:#fff;border:none;border-radius:24px;padding:12px 18px;font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer">📲 앱으로 설치</button>
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null;
+  document.getElementById('installBtn').classList.add('hidden');
+});
+</script>
+</body>
+</html>

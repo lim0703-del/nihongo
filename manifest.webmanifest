@@ -1,0 +1,17 @@
+{
+  "name": "일본어 공부 · 동사 활용 · 여행 일본어",
+  "short_name": "일본어 공부",
+  "description": "동사 102개 활용, 숫자 퀴즈, 교토·오사카 여행 일본어",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f6fa",
+  "theme_color": "#263238",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
